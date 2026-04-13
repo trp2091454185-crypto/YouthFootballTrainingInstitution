@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: institution/milestone
+    prefix: /api/v1/institution/milestone
+)
+service gateway {
+    @handler CreateMilestone
+    post /
+
+    @handler ListMilestone
+    get /
+
+    @handler UpdateMilestone
+    put /:id
+
+    @handler DeleteMilestone
+    delete /:ids
+
+    @handler FindMilestone
+    get /:id
+}

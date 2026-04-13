@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: feedback
+    prefix: /api/v1/feedback
+)
+service gateway {
+    @handler CreateFeedback
+    post /
+
+    @handler ListFeedback
+    get /
+
+    @handler UpdateFeedback
+    put /:id
+
+    @handler DeleteFeedback
+    delete /:ids
+
+    @handler FindFeedback
+    get /:id
+}

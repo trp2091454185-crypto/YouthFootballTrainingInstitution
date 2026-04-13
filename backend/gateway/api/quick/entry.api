@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: quick/entry
+    prefix: /api/v1/quick/entry
+)
+service gateway {
+    @handler CreateEntry
+    post /
+
+    @handler ListEntry
+    get /
+
+    @handler UpdateEntry
+    put /:id
+
+    @handler DeleteEntry
+    delete /:ids
+
+    @handler FindEntry
+    get /:id
+}

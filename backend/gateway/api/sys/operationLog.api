@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: sys/operationLog
+    prefix: /api/v1/sys/operationLog
+)
+service gateway {
+    @handler CreateOperationLog
+    post /
+
+    @handler ListOperationLog
+    get /
+
+    @handler UpdateOperationLog
+    put /:id
+
+    @handler DeleteOperationLog
+    delete /:ids
+
+    @handler FindOperationLog
+    get /:id
+}

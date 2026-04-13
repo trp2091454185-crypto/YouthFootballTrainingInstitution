@@ -1,0 +1,17 @@
+syntax = "v1"
+
+
+@server(
+    group: frontend/home
+    prefix: /api/v1/frontend/home
+)
+service gateway {
+   //获取核心优势展示信息
+    @handler GetCoreStrengths
+    get /coreStrengths
+
+//获取轮播图
+    @handler GetBanner
+    get /banner
+
+ }

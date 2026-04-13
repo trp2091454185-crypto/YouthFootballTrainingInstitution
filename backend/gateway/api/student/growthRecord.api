@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: student/growthRecord
+    prefix: /api/v1/student/growthRecord
+)
+service gateway {
+    @handler CreateGrowthRecord
+    post /
+
+    @handler ListGrowthRecord
+    get /
+
+    @handler UpdateGrowthRecord
+    put /:id
+
+    @handler DeleteGrowthRecord
+    delete /:ids
+
+    @handler FindGrowthRecord
+    get /:id
+}

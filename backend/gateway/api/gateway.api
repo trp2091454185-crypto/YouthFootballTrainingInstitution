@@ -1,0 +1,36 @@
+syntax = "v1"
+
+info (
+	title:   "足球俱乐部管理系统API"
+	desc:    "网关API"
+	author:  "Tismpeng"
+	email:   "2091454185@qq.com"
+	version: "v1.0"
+)
+
+import (
+	"banner/Banner.api"
+	"class/schedule.api"
+	"coach/Coach.api"
+	"core/advantage.api"
+	"course/category.api"
+	"course/class.api"
+	"course/Course.api"
+	"feedback/Feedback.api"
+	"institution/facility.api"
+	"institution/honor.api"
+	"institution/info.api"
+	"institution/milestone.api"
+	"quick/entry.api"
+	"registration/Registration.api"
+	"student/attendance.api"
+	"student/enrollment.api"
+	"student/fitnessTest.api"
+	"student/growthRecord.api"
+	"student/Student.api"
+	"sys/config.api"
+	"sys/operationLog.api"
+	"sys/user.api"
+	"frontend/home.api"
+)
+

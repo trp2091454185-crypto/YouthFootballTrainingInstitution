@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: student/fitnessTest
+    prefix: /api/v1/student/fitnessTest
+)
+service gateway {
+    @handler CreateFitnessTest
+    post /
+
+    @handler ListFitnessTest
+    get /
+
+    @handler UpdateFitnessTest
+    put /:id
+
+    @handler DeleteFitnessTest
+    delete /:ids
+
+    @handler FindFitnessTest
+    get /:id
+}

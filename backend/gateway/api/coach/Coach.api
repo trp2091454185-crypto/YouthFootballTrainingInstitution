@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: coach
+    prefix: /api/v1/coach
+)
+service gateway {
+    @handler CreateCoach
+    post /
+
+    @handler ListCoach
+    get /
+
+    @handler UpdateCoach
+    put /:id
+
+    @handler DeleteCoach
+    delete /:ids
+
+    @handler FindCoach
+    get /:id
+}

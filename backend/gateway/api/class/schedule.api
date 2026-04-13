@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: class/schedule
+    prefix: /api/v1/class/schedule
+)
+service gateway {
+    @handler CreateSchedule
+    post /
+
+    @handler ListSchedule
+    get /
+
+    @handler UpdateSchedule
+    put /:id
+
+    @handler DeleteSchedule
+    delete /:ids
+
+    @handler FindSchedule
+    get /:id
+}

@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: banner
+    prefix: /api/v1/banner
+)
+service gateway {
+    @handler CreateBanner
+    post /
+
+    @handler ListBanner
+    get /
+
+    @handler UpdateBanner
+    put /:id
+
+    @handler DeleteBanner
+    delete /:ids
+
+    @handler FindBanner
+    get /:id
+}

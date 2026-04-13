@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: sys/config
+    prefix: /api/v1/sys/config
+)
+service gateway {
+    @handler CreateConfig
+    post /
+
+    @handler ListConfig
+    get /
+
+    @handler UpdateConfig
+    put /:id
+
+    @handler DeleteConfig
+    delete /:ids
+
+    @handler FindConfig
+    get /:id
+}

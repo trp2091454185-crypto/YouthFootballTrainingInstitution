@@ -1,0 +1,175 @@
+.coaches-page {
+    background: #fafafa;
+
+    .coaches-hero {
+        background: linear-gradient(135deg, #1565C0 0%, #1976D2 40%, #42A5F5 100%);
+        padding: 80px 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: -15%;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero-icon {
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            color: #ffffff !important;
+            font-size: 36px !important;
+            font-weight: 700 !important;
+            margin-bottom: 16px !important;
+        }
+
+        .hero-desc {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-size: 16px !important;
+            line-height: 1.8 !important;
+            margin-bottom: 32px !important;
+        }
+
+        .coach-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+
+            .stat-item {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                .stat-num {
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #fff;
+                }
+
+                .stat-text {
+                    font-size: 13px;
+                    color: rgba(255, 255, 255, 0.75);
+                }
+            }
+
+            .stat-divider {
+                width: 1px;
+                height: 36px;
+                background: rgba(255, 255, 255, 0.25);
+            }
+        }
+    }
+
+    .coaches-list-section {
+        padding: 60px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+
+        .coach-card {
+            border-radius: 16px !important;
+            border: 1px solid rgba(0, 0, 0, 0.06) !important;
+            transition: all 0.3s ease;
+            overflow: hidden;
+
+            &:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 32px rgba(25, 118, 210, 0.15);
+
+                .coach-avatar {
+                    transform: scale(1.05);
+                    box-shadow: 0 4px 16px rgba(25, 118, 210, 0.3);
+                }
+            }
+
+            .coach-header {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid #f0f0f0;
+                margin-bottom: 16px;
+
+                .coach-avatar {
+                    background: linear-gradient(135deg, #1976D2 0%, #42A5F5 100%) !important;
+                    flex-shrink: 0;
+                    transition: all 0.3s ease;
+                }
+
+                .coach-info {
+                    flex: 1;
+                    min-width: 0;
+
+                    .coach-name {
+                        font-size: 18px !important;
+                        font-weight: 600 !important;
+                        color: #212121 !important;
+                        margin-bottom: 4px !important;
+                    }
+
+                    .coach-title {
+                        font-size: 13px;
+                        color: #757575;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
+
+            .coach-tags {
+                margin-bottom: 16px;
+
+                :global(.ant-tag) {
+                    border-radius: 6px;
+                    font-size: 12px;
+                }
+            }
+
+            .coach-detail {
+                .detail-item {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 10px;
+                    padding: 8px 0;
+                    
+                    &:not(:last-child) {
+                        border-bottom: 1px dashed #f0f0f0;
+                    }
+
+                    .detail-icon {
+                        font-size: 16px;
+                        color: #1976D2;
+                        margin-top: 2px;
+                        flex-shrink: 0;
+                    }
+
+                    > div {
+                        p {
+                            margin: 4px 0 0;
+                            font-size: 13px;
+                            color: #424242;
+                            line-height: 1.6;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: institution/facility
+    prefix: /api/v1/institution/facility
+)
+service gateway {
+    @handler CreateFacility
+    post /
+
+    @handler ListFacility
+    get /
+
+    @handler UpdateFacility
+    put /:id
+
+    @handler DeleteFacility
+    delete /:ids
+
+    @handler FindFacility
+    get /:id
+}

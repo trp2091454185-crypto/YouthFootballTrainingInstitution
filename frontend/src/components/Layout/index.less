@@ -1,0 +1,116 @@
+.custom-layout {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+
+    .sider {
+        height: 100vh;
+        position: fixed;
+        z-index: 10;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+
+        .logo-container {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+
+            .logo {
+                font-size: 32px;
+                color: #1890ff;
+                margin-right: 8px;
+
+                img {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+
+            .logo-text {
+                color: #000000E0;
+                font-size: 18px;
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        :global(.ant-menu) {
+            flex: 1;
+        }
+
+        .user-info {
+            padding: 12px 16px;
+            margin: 8px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border-top: 1px solid #00000010;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: rgba(24, 144, 255, 0.1);
+                border-color: rgba(24, 144, 255, 0.2);
+                box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+            }
+
+            :global(.ant-avatar) {
+                flex-shrink: 0;
+                background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
+                box-shadow: 0 2px 6px rgba(24, 144, 255, 0.3);
+            }
+
+            .user-name {
+                color: #00000040;
+                font-size: 14px;
+                font-weight: 500;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+    }
+
+
+
+    .outer-layout {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-left: 240px;
+        transition: margin-left 0.2s;
+
+        &.collapsed {
+            margin-left: 64px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 0px;
+            background: #f0f2f5;
+            overflow-y: auto;
+
+            .page-transition {
+                animation: pageFadeIn 0.3s ease-out;
+            }
+
+            @keyframes pageFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        }
+    }
+}

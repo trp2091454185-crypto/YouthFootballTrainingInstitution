@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: core/advantage
+    prefix: /api/v1/core/advantage
+)
+service gateway {
+    @handler CreateAdvantage
+    post /
+
+    @handler ListAdvantage
+    get /
+
+    @handler UpdateAdvantage
+    put /:id
+
+    @handler DeleteAdvantage
+    delete /:ids
+
+    @handler FindAdvantage
+    get /:id
+}

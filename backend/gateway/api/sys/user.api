@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: sys/user
+    prefix: /api/v1/sys/user
+)
+service gateway {
+    @handler CreateUser
+    post /
+
+    @handler ListUser
+    get /
+
+    @handler UpdateUser
+    put /:id
+
+    @handler DeleteUser
+    delete /:ids
+
+    @handler FindUser
+    get /:id
+}

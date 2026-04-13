@@ -1,0 +1,12 @@
+Name: gateway
+Host: 0.0.0.0
+Port: 4000
+
+
+# 新增MySQL数据库配置（GORM用）
+Mysql:
+  Dsn: "root:trp445566@tcp(192.168.227.128:2881)/soccer?charset=utf8mb4&parseTime=True&loc=Local" # 数据库DSN
+  MaxOpenConns: 100 # 最大打开连接数
+  MaxIdleConns: 20  # 最大空闲连接数
+  MaxLifetime: 3600 # 连接最大存活时间（秒）
+  MaxIdleTime: 1800 # 连接最大空闲时间（秒）

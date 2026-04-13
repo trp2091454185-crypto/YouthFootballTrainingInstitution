@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: institution/honor
+    prefix: /api/v1/institution/honor
+)
+service gateway {
+    @handler CreateHonor
+    post /
+
+    @handler ListHonor
+    get /
+
+    @handler UpdateHonor
+    put /:id
+
+    @handler DeleteHonor
+    delete /:ids
+
+    @handler FindHonor
+    get /:id
+}

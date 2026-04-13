@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: registration
+    prefix: /api/v1/registration
+)
+service gateway {
+    @handler CreateRegistration
+    post /
+
+    @handler ListRegistration
+    get /
+
+    @handler UpdateRegistration
+    put /:id
+
+    @handler DeleteRegistration
+    delete /:ids
+
+    @handler FindRegistration
+    get /:id
+}

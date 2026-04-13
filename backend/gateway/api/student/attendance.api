@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: student/attendance
+    prefix: /api/v1/student/attendance
+)
+service gateway {
+    @handler CreateAttendance
+    post /
+
+    @handler ListAttendance
+    get /
+
+    @handler UpdateAttendance
+    put /:id
+
+    @handler DeleteAttendance
+    delete /:ids
+
+    @handler FindAttendance
+    get /:id
+}

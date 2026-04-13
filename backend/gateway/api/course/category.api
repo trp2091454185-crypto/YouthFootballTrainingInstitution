@@ -1,0 +1,23 @@
+syntax = "v1"
+
+
+@server(
+    group: course/category
+    prefix: /api/v1/course/category
+)
+service gateway {
+    @handler CreateCategory
+    post /
+
+    @handler ListCategory
+    get /
+
+    @handler UpdateCategory
+    put /:id
+
+    @handler DeleteCategory
+    delete /:ids
+
+    @handler FindCategory
+    get /:id
+}

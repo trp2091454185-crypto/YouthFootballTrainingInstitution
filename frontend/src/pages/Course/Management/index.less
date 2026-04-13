@@ -1,0 +1,566 @@
+.course-page {
+    height: 100%;
+
+    .course-layout {
+        display: flex;
+        gap: 16px;
+        height: 100%;
+        min-height: calc(100vh - 150px);
+
+        // 左侧树形区域
+        .course-sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+            .ant-card {
+                height: 100%;
+                border: none;
+
+                .ant-card-head {
+                    border-bottom: 1px solid #f0f0f0;
+                    min-height: 48px;
+
+                    .ant-card-head-title {
+                        font-weight: 500;
+                        font-size: 14px;
+                    }
+                }
+
+                .ant-card-body {
+                    height: calc(100% - 48px);
+                    padding: 0;
+                    overflow-y: auto;
+
+                    .ant-spin-nested-loading {
+                        height: 100%;
+
+                        .ant-spin-container {
+                            height: 100%;
+                        }
+                    }
+                }
+            }
+
+            // 树形样式 - 简约高级风
+            .category-tree {
+                background: transparent;
+                padding: 4px;
+
+                // 覆盖所有默认阴影
+                *,
+                *::before,
+                *::after {
+                    box-shadow: none !important;
+                }
+
+                .ant-tree-treenode {
+                    padding: 6px 8px;
+                    border-radius: 2px;
+                    width: 100%;
+                    transition: background-color 0.2s ease;
+                    box-shadow: none !important;
+
+                    &:hover {
+                        background-color: rgba(0, 0, 0, 0.02);
+                    }
+
+                    &.ant-tree-treenode-selected {
+                        background: #f0f4ff;
+                        box-shadow: none !important;
+
+                        .ant-tree-node-content-wrapper {
+                            color: #3b82f6;
+                        }
+
+                        .ant-tree-title {
+                            color: #2563eb;
+                            font-weight: 500;
+                        }
+
+                        .ant-tree-iconEle {
+                            color: #3b82f6;
+                        }
+                    }
+                }
+
+                .ant-tree-node-content-wrapper {
+                    display: flex;
+                    align-items: center;
+                    padding: 4px 6px;
+                    border-radius: 6px;
+                    transition: all 0.2s ease;
+                    color: #4b5563;
+                    min-height: 28px;
+
+                    &:hover {
+                        background-color: transparent;
+                    }
+                }
+
+                .ant-tree-iconEle {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px;
+                    height: 20px;
+                    margin-right: 8px;
+                    color: #9ca3af;
+                    transition: color 0.2s ease;
+
+                    .anticon {
+                        font-size: 14px;
+                    }
+                }
+
+                .ant-tree-title {
+                    font-size: 13px;
+                    font-weight: 400;
+                    letter-spacing: 0.01em;
+                    transition: all 0.2s ease;
+                }
+
+                .ant-tree-switcher {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 4px;
+                    color: #9ca3af;
+                    transition: color 0.2s ease;
+                    background: none !important;
+                    box-shadow: none !important;
+
+                    &:hover {
+                        background: none !important;
+                        box-shadow: none !important;
+                        color: #6b7280;
+                    }
+
+                    &:focus {
+                        background: none !important;
+                        box-shadow: none !important;
+                    }
+
+                    &::before {
+                        display: none !important;
+                    }
+
+                    .ant-tree-switcher-icon {
+                        font-size: 10px;
+                    }
+                }
+
+                // 子节点缩进优化
+                .ant-tree-indent {
+                    .ant-tree-indent-unit {
+                        width: 20px;
+                    }
+                }
+
+                // 子节点样式微调
+                .ant-tree-child-tree {
+                    position: relative;
+                    padding-left: 8px;
+
+                    // 左侧装饰线
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        left: 14px;
+                        top: 0;
+                        bottom: 12px;
+                        width: 1px;
+                        background: linear-gradient(180deg, #e5e7eb 0%, transparent 100%);
+                    }
+                }
+
+                // 树节点标题（包含操作按钮）
+                .tree-node-title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 150px;
+                    padding-right: 4px;
+
+                    .node-name {
+                        flex: 1;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    .node-actions {
+                        opacity: 0;
+                        transition: opacity 0.2s ease;
+                        display: flex;
+                        align-items: center;
+                        gap: 2px;
+
+                        .action-btn {
+                            width: 22px;
+                            height: 22px;
+                            min-width: 22px;
+                            padding: 0;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 4px;
+                            transition: all 0.2s ease;
+
+                            .anticon {
+                                font-size: 12px;
+                            }
+                        }
+
+                        // 更多操作按钮样式
+                        .more-btn {
+                            color: #9ca3af;
+
+                            &:hover {
+                                background-color: rgba(0, 0, 0, 0.05);
+                                color: #6b7280;
+                            }
+                        }
+                    }
+                }
+
+                // 鼠标悬浮时显示操作按钮
+                .ant-tree-treenode:hover {
+                    .tree-node-title .node-actions {
+                        opacity: 1;
+                    }
+                }
+
+                // 选中状态下也显示操作按钮
+                .ant-tree-treenode.ant-tree-treenode-selected {
+                    .tree-node-title .node-actions {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+
+        // 右侧内容区域
+        .course-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 0; // 防止flex子项溢出
+
+            .content-header {
+                width: 100%;
+                min-height: 56px;
+                background-color: #ffffff;
+                display: flex;
+                padding: 12px 16px;
+                border-radius: 8px;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+                gap: 16px;
+                flex-wrap: wrap;
+
+                .header-left {
+                    display: flex;
+                    align-items: center;
+                    flex: 1;
+                    min-width: 200px;
+                }
+
+                .header-right {
+                    display: flex;
+                    align-items: center;
+                    flex-shrink: 0;
+                }
+            }
+
+            .content-table {
+                flex: 1;
+                width: 100%;
+                padding: 10px;
+                border-radius: 8px;
+                background-color: #ffffff;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+                overflow: auto;
+            }
+        }
+    }
+
+    // 响应式适配
+    @media (max-width: 768px) {
+        .course-layout {
+            flex-direction: column;
+
+            .course-sidebar {
+                width: 100%;
+                max-height: 300px;
+            }
+
+            .course-content {
+                .content-header {
+                    flex-direction: column;
+                    align-items: stretch;
+
+                    .header-left {
+                        width: 100%;
+
+                        .ant-input-search {
+                            max-width: none;
+                        }
+                    }
+
+                    .header-right {
+                        width: 100%;
+                        justify-content: flex-end;
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .course-content {
+            .content-header {
+                .header-right {
+                    .ant-space {
+                        flex-wrap: wrap;
+                        gap: 8px !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 编辑页面样式
+.editContainer {
+    padding: 0;
+
+    // 卡片区块样式
+    .section-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03),
+            0 1px 6px -1px rgba(0, 0, 0, 0.02),
+            0 2px 4px 0 rgba(0, 0, 0, 0.02);
+        margin-bottom: 16px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05),
+                0 2px 8px -2px rgba(0, 0, 0, 0.03),
+                0 4px 8px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        // 卡片头部
+        .section-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid #f0f0f0;
+
+            // 左侧装饰条
+            &::before {
+                content: '';
+                width: 4px;
+                height: 16px;
+                background: linear-gradient(180deg, #1890ff 0%, #096dd9 100%);
+                border-radius: 2px;
+                margin-right: 12px;
+            }
+
+            .section-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #262626;
+                line-height: 24px;
+            }
+
+            .section-subtitle {
+                font-size: 13px;
+                color: #8c8c8c;
+                margin-left: 12px;
+                padding-left: 12px;
+                border-left: 1px solid #e8e8e8;
+            }
+        }
+
+        // 卡片内容区
+        .section-body {
+            padding: 24px;
+        }
+    }
+
+    // 表单样式优化
+    :global {
+        .ant-form {
+            // 标签样式
+            .ant-form-item-label {
+                padding-bottom: 4px;
+
+                >label {
+                    font-size: 14px;
+                    color: #262626;
+                    font-weight: 500;
+                    height: 22px;
+                    line-height: 22px;
+
+                    // 必填项星号样式
+                    &.ant-form-item-required::before {
+                        color: #ff4d4f;
+                        font-size: 14px;
+                        margin-right: 4px;
+                    }
+                }
+            }
+
+            // 表单项间距
+            .ant-form-item {
+                margin-bottom: 20px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            // 输入框统一样式
+            .ant-input,
+            .ant-input-number,
+            .ant-picker,
+            .ant-select-selector {
+                border-radius: 6px;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    border-color: #40a9ff;
+                }
+
+                &:focus,
+                &.ant-input-focused,
+                &.ant-select-focused .ant-select-selector {
+                    border-color: #1890ff;
+                    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+                }
+            }
+
+            // 输入框高度统一
+            .ant-input,
+            .ant-select-selector {
+                min-height: 36px;
+                padding: 6px 12px;
+            }
+
+            .ant-input-number {
+                height: 36px;
+
+                .ant-input-number-input {
+                    height: 34px;
+                }
+            }
+
+            // 文本域样式
+            textarea.ant-input {
+                min-height: 80px;
+                resize: vertical;
+            }
+
+            // 选择器占位符颜色
+            .ant-select-selection-placeholder {
+                color: #bfbfbf;
+            }
+
+            // 错误提示样式
+            .ant-form-item-explain-error {
+                font-size: 13px;
+                margin-top: 4px;
+            }
+        }
+    }
+
+    // 课程大纲项样式
+    .outline-item {
+        padding: 16px;
+        background: #fafafa;
+        border-radius: 6px;
+        border: 1px solid #f0f0f0;
+
+        &:hover {
+            border-color: #d9d9d9;
+        }
+    }
+
+    // 右侧快捷信息卡片
+    .info-card {
+        background: linear-gradient(135deg, #f6ffed 0%, #f0f5ff 100%);
+        border: 1px solid #d9f7be;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+
+        .info-icon {
+            width: 48px;
+            height: 48px;
+            background: #52c41a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .info-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 8px;
+        }
+
+        .info-desc {
+            font-size: 13px;
+            color: #595959;
+            line-height: 1.6;
+        }
+    }
+
+    // 底部操作栏
+    .form-footer {
+        position: sticky;
+        bottom: 0;
+        background: #fff;
+        border-top: 1px solid #f0f0f0;
+        padding: 16px 24px;
+        margin: 0 -24px -24px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+    }
+}
+
+// 响应式适配
+@media (max-width: 768px) {
+    .editContainer {
+        .section-card {
+            .section-header {
+                padding: 12px 16px;
+            }
+
+            .section-body {
+                padding: 16px;
+            }
+        }
+
+        :global {
+            .ant-form {
+                .ant-form-item {
+                    margin-bottom: 16px;
+                }
+            }
+        }
+    }
+}
