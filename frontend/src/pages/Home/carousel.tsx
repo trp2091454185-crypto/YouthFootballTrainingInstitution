@@ -24,6 +24,8 @@ import {
 import SpecialTable from '@/components/SpecialTable';
 import CarouselForm from './Components/carouselForm';
 import CarouselDetail from './Components/carouseDetail';
+import getStatusColumn from '@/components/StatusColumn';
+import getTimeColumns from '@/components/TimeColumn';
 
 const Carousel: React.FC = () => {
   useEffect(() => {
@@ -87,21 +89,6 @@ const Carousel: React.FC = () => {
       actionRef.current?.reload();
     } catch (error) {
       message.error('批量删除失败');
-    }
-  };
-
-  // 切换状态
-  const handleToggleStatus = async (id: string, newStatus: number) => {
-    try {
-      const res = await updateBanner(id, { status: newStatus } as Banner);
-      if (res.success) {
-        actionRef.current?.reload();
-      } else {
-        message.error(res.errorMessage || '状态更新失败');
-        actionRef.current?.reload();
-      }
-    } catch (error) {
-      message.error('状态更新失败');
     }
   };
 
@@ -183,48 +170,13 @@ const Carousel: React.FC = () => {
         </Tag>
       ),
     },
-    // {
-    //   title: '链接地址',
-    //   width: 160,
-    //   search: false,
-    //   render: (_, record) => {
-    //     if (record.linkType === 2) return <span>{record.linkPage || '-'}</span>;
-    //     if (record.linkType === 3) return <span style={{ wordBreak: 'break-all' }}>{record.linkUrl || '-'}</span>;
-    //     return '-';
-    //   },
-    // },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      width: 100,
-      valueType: 'select',
-      fieldProps: {
-        options: [
-          { label: '显示', value: 2 },
-          { label: '隐藏', value: 1 },
-        ],
-      },
-      render: (_, record) => (
-        <Switch
-          checked={record.status === 2}
-          checkedChildren="显示"
-          unCheckedChildren="隐藏"
-          onChange={(checked) => handleToggleStatus(record.id!, checked ? 2 : 1)}
-        />
-      ),
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createdAt',
-      width: 170,
-      valueType: 'dateTime',
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updatedAt',
-      width: 170,
-      valueType: 'dateTime',
-    },
+    //状态组件
+    getStatusColumn<any>({
+      updateApi: updateBanner,
+      actionRef,
+    }),
+    //时间组件
+    ...getTimeColumns<any>(),
     {
       title: '操作',
       key: 'action',

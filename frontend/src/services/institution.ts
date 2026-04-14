@@ -52,7 +52,7 @@ export interface InstitutionHonor {
   awardOrg?: string;
   image?: string;
   sortOrder: number;
-  status: 0 | 1;
+  status: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -156,11 +156,19 @@ export const updateFacilitySort = (id: string, sortOrder: number) => {
   });
 };
 
+// 荣誉奖项列表参数
+export interface HonorListParams {
+  current?: number;
+  pageSize?: number;
+  keyword?: string;
+  status?: number;
+}
+
 // ==================== 荣誉奖项 API ====================
 
 // 获取荣誉奖项列表
-export const getHonorList = (params?: { status?: number }) => {
-  return request('/api/institution/honor/list', {
+export const getHonorList = (params?: HonorListParams) => {
+  return request('/api/v1/institution/honor', {
     method: 'GET',
     params,
   });
@@ -168,7 +176,7 @@ export const getHonorList = (params?: { status?: number }) => {
 
 // 创建荣誉奖项
 export const createHonor = (data: InstitutionHonor) => {
-  return request('/api/institution/honor/create', {
+  return request('/api/v1/institution/honor', {
     method: 'POST',
     data,
   });
@@ -176,7 +184,7 @@ export const createHonor = (data: InstitutionHonor) => {
 
 // 更新荣誉奖项
 export const updateHonor = (id: string, data: InstitutionHonor) => {
-  return request(`/api/institution/honor/update/${id}`, {
+  return request(`/api/v1/institution/honor/${id}`, {
     method: 'PUT',
     data,
   });
@@ -184,7 +192,7 @@ export const updateHonor = (id: string, data: InstitutionHonor) => {
 
 // 删除荣誉奖项
 export const deleteHonor = (id: string) => {
-  return request(`/api/institution/honor/delete/${id}`, {
+  return request(`/api/v1/institution/honor/${id}`, {
     method: 'DELETE',
   });
 };

@@ -21,6 +21,8 @@ import {
 import SpecialTable from '@/components/SpecialTable';
 import CoreAdvantageForm from './Components/form';
 import { ICON_MAP } from '@/components/IconsSelect';
+import getTimeColumns from '@/components/TimeColumn';
+import getStatusColumn from '@/components/StatusColumn';
 
 const HomeContent: React.FC = () => {
     useEffect(() => {
@@ -83,21 +85,6 @@ const HomeContent: React.FC = () => {
         }
     };
 
-    // 切换状态
-    const handleToggleStatus = async (id: string, newStatus: number) => {
-        try {
-            // 标记该行 loading 状态（通过修改数据触发重新渲染）
-            const res = await updateCoreAdvantage(id, { status: newStatus } as CoreAdvantage);
-            if (res.success) {
-                actionRef.current?.reload();
-            } else {
-                message.error(res.errorMessage || '状态更新失败');
-                actionRef.current?.reload();
-            }
-        } catch (error) {
-            message.error('状态更新失败');
-        }
-    };
 
     // 打开新增 Modal
     const handleAdd = () => {
@@ -146,40 +133,11 @@ const HomeContent: React.FC = () => {
             width: 250,
             ellipsis: true,
         },
-        {
-            title: '状态',
-            dataIndex: 'status',
-            width: 100,
-            valueType: 'select',
-            fieldProps: {
-                options: [
-                    { label: '显示', value: 2 },
-                    { label: '隐藏', value: 1 },
-                ],
-            },
-            render: (_, record) => (
-                <Switch
-                    checked={record.status === 2}
-                    checkedChildren="显示"
-                    unCheckedChildren="隐藏"
-                    onChange={(checked) => handleToggleStatus(record.id!, checked ? 2 : 1)}
-                />
-            ),
-        },
-        {
-            title: '创建时间',
-            dataIndex: 'createdAt',
-            width: 170,
-            valueType: 'dateTime',
-            search: false,
-        },
-        {
-            title: '更新时间',
-            dataIndex: 'updatedAt',
-            width: 170,
-            valueType: 'dateTime',
-            search: false,
-        },
+        getStatusColumn<any>({
+            updateApi: updateCoreAdvantage,
+            actionRef,
+        }),
+        ...getTimeColumns<any>(),
         {
             title: '操作',
             key: 'action',
