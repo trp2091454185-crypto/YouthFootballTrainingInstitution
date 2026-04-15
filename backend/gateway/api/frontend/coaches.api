@@ -1,0 +1,13 @@
+syntax = "v1"
+
+
+@server(
+    group: frontend/coaches
+    prefix: /api/v1/frontend/coaches
+)
+service gateway {
+    //获取教练团队信息
+    @handler GetCoaches
+    get /ListCoaches
+
+}

@@ -1,144 +1,124 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Avatar, Tag, Typography, Empty } from 'antd';
 import {
     TeamOutlined,
     SafetyCertificateOutlined,
     TrophyOutlined,
     StarFilled,
+    SolutionOutlined,
 } from '@ant-design/icons';
 import './Coaches.less';
+import { getCoachesList } from '@/services/frontend';
 
 const { Title, Paragraph, Text } = Typography;
 
-const coaches = [
-    {
-        name: '张伟',
-        title: '总教练 / 亚足联A级教练员',
-        specialty: '战术训练、比赛指导',
-        experience: '15年执教经验，前中超球员',
-        achievements: '带队获得省级冠军3次',
-        avatar: null,
-        tags: ['亚足联A级', '前职业球员'],
-    },
-    {
-        name: '李强',
-        title: '技术总监 / 亚足联B级教练员',
-        specialty: '技术训练、青训体系设计',
-        experience: '12年执教经验',
-        achievements: '培养职业球员20余名',
-        avatar: null,
-        tags: ['亚足联B级', '青训专家'],
-    },
-    {
-        name: '王磊',
-        title: '守门员教练 / 前国少队门将',
-        specialty: '守门员专项训练',
-        experience: '10年执教经验，8年职业履历',
-        achievements: '培养多名优秀门将',
-        avatar: null,
-        tags: ['门将专项', '前国字号'],
-    },
-    {
-        name: '陈明',
-        title: '体能教练 / 国家一级运动员',
-        specialty: '体能训练、运动康复',
-        experience: '8年专业体能训练经验',
-        achievements: '运动科学硕士学历',
-        avatar: null,
-        tags: ['体能专项', '运动科学'],
-    },
-    {
-        name: '刘洋',
-        title: 'U12梯队主教练 / 亚足联C级教练员',
-        specialty: '青少年基础技术教学',
-        experience: '7年青少年足球教学经验',
-        achievements: '多次获评优秀教师',
-        avatar: null,
-        tags: ['亚足联C级', '少儿专家'],
-    },
-    {
-        name: '赵鹏',
-        title: 'U8梯队主教练 / 体育教育学士',
-        specialty: '幼儿足球启蒙教育',
-        experience: '6年少儿足球启蒙经验',
-        achievements: '独创趣味足球教学法',
-        avatar: null,
-        tags: ['启蒙教育', '趣味教学'],
-    },
-];
+// 个人简介最大显示字符数
+const BIO_MAX_LENGTH = 60;
 
 const Coaches: React.FC = () => {
+
+    const [coachesList, setCoachesList] = useState<any[]>([]);
+    // 记录每张卡片简介的展开状态，key 为 coach index
+    const [expandedBio, setExpandedBio] = useState<Set<number>>(new Set());
+
     useEffect(() => {
         document.title = '教练团队';
+        fetchCoachesList();
     }, []);
+
+    // 获取教练团队数据
+    const fetchCoachesList = async () => {
+        try {
+            const res = await getCoachesList();
+            if (res?.success) {
+                setCoachesList(res?.data?.list || []);
+            }
+        } catch (error) {
+            console.error('获取数据失败:', error);
+        }
+    };
+
+    // 切换个人简介展开/收起
+    const toggleBio = (index: number) => {
+        setExpandedBio(prev => {
+            const next = new Set(prev);
+            next.has(index) ? next.delete(index) : next.add(index);
+            return new Set(next);
+        });
+    };
+
+
     return (
         <div className="coaches-page">
             {/* 团队总览区块 */}
             <section className="coaches-hero">
+                <div className="hero-grid-bg" />
+                <div className="hero-glow hero-glow--left" />
+                <div className="hero-glow hero-glow--right" />
                 <div className="hero-content">
-                    <TeamOutlined className="hero-icon" />
+                    <span className="hero-badge">PROFESSIONAL TEAM</span>
                     <Title level={1} className="hero-title">精英教练团队</Title>
                     <Paragraph className="hero-desc">
-                        汇聚行业顶尖教练人才，以专业的态度和丰富的经验，
+                        汇聚行业顶尖教练人才，以专业的态度和丰富的经验<br />
                         为每一位学员量身定制成长方案
                     </Paragraph>
-                    <div className="coach-stats">
-                        <div className="stat-item">
-                            <span className="stat-num">10+</span>
-                            <span className="stat-text">资深教练</span>
-                        </div>
-                        <div className="stat-divider" />
-                        <div className="stat-item">
-                            <span className="stat-num">80%</span>
-                            <span className="stat-text">持证上岗</span>
-                        </div>
-                        <div className="stat-divider" />
-                        <div className="stat-item">
-                            <span className="stat-num">10年+</span>
-                            <span className="stat-text">平均教龄</span>
-                        </div>
-                    </div>
                 </div>
             </section>
 
             {/* 教练列表 */}
             <section className="coaches-list-section">
                 <Row gutter={[24, 24]} justify="center">
-                    {coaches.map((coach, index) => (
+                    {coachesList.map((coach, index) => (
                         <Col xs={24} sm={12} lg={8} key={index}>
-                            <Card className="coach-card" hoverable>
+                            <Card className="coach-card">
                                 <div className="coach-header">
-                                    <Avatar size={72} className="coach-avatar" icon={<TeamOutlined />} />
+                                    <Avatar size={72} className="coach-avatar" src={coach?.avatar} />
                                     <div className="coach-info">
-                                        <Title level={4} className="coach-name">{coach.name}</Title>
-                                        <Text className="coach-title">{coach.title}</Text>
+                                        <Title level={4} className="coach-name">{coach?.name}</Title>
+                                        <span className="coach-years">执教 {coach?.workYears || 0} 年</span>
+                                        <div className="coach-age-groups">
+                                            {coach?.ageGroups && coach.ageGroups.length > 0 ? (
+                                                coach.ageGroups.map((tag: string, i: number) => (
+                                                    <span key={i} className="age-tag">{tag}</span>
+                                                ))
+                                            ) : (
+                                                <span className="age-empty">暂无</span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="coach-tags">
-                                    {coach.tags.map((tag, i) => (
-                                        <Tag key={i} color="#2E7D32">{tag}</Tag>
-                                    ))}
+                                    {coach?.specialties && coach.specialties.length > 0 ? (
+                                        coach.specialties.map((tag: string, i: number) => (
+                                            <Tag key={i} color="#2E7D32">{tag}</Tag>
+                                        ))
+                                    ) : (
+                                        <span style={{ color: '#999' }}>暂无</span>
+                                    )}
                                 </div>
                                 <div className="coach-detail">
                                     <div className="detail-item">
                                         <SafetyCertificateOutlined className="detail-icon" />
                                         <div>
-                                            <Text type="secondary">擅长领域</Text>
-                                            <p>{coach.specialty}</p>
+                                            <Text type="secondary">教学特色</Text>
+                                            <p>{coach.teachingFeatures}</p>
                                         </div>
                                     </div>
                                     <div className="detail-item">
-                                        <StarFilled className="detail-icon" style={{ color: '#FFC107' }} />
-                                        <div>
-                                            <Text type="secondary">个人经历</Text>
-                                            <p>{coach.experience}</p>
-                                        </div>
-                                    </div>
-                                    <div className="detail-item">
-                                        <TrophyOutlined className="detail-icon" style={{ color: '#FF5722' }} />
-                                        <div>
-                                            <Text type="secondary">主要成就</Text>
-                                            <p>{coach.achievements}</p>
+                                        <SolutionOutlined className="detail-icon" style={{ color: '#FF6B35' }} />
+                                        <div className="bio-wrapper">
+                                            <Text type="secondary">个人简介</Text>
+                                            <p className={`bio-text${expandedBio.has(index) ? ' is-expanded' : ''}`}>
+                                                {coach?.bio || '暂无简介'}
+                                            </p>
+                                            {coach?.bio && coach.bio.length > BIO_MAX_LENGTH && (
+                                                <span
+                                                    className="bio-toggle"
+                                                    onClick={() => toggleBio(index)}
+                                                >
+                                                    {expandedBio.has(index) ? '收起' : '展开'}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

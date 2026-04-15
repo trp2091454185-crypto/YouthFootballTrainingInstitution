@@ -17,3 +17,10 @@ export const getFrontHonorList = () => {
         method: 'GET',
     });
 };
+
+export const getCoachesList = () => {
+    return request('/api/v1/frontend/coaches/ListCoaches', {
+        method: 'GET',
+    });
+};
+

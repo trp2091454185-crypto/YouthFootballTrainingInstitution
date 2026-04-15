@@ -16,33 +16,20 @@ import {
   EyeOutlined,
   ManOutlined,
   WomanOutlined,
+  PhoneOutlined,
+  MailOutlined,
 } from '@ant-design/icons';
 import type { Coach, CoachListParams } from '@/services/coach';
 import {
   getCoachList,
   deleteCoach,
+  updateCoach,
 } from '@/services/coach';
 import SpecialTable from '@/components/SpecialTable';
+import getTimeColumns from '@/components/TimeColumn';
+import getStatusColumn from '@/components/StatusColumn';
+import { AGE_GROUP_OPTIONS, SPECIALTY_OPTIONS } from '@/utils/constant';
 
-// 专项擅长选项
-const SPECIALTY_OPTIONS = [
-  { label: '启蒙', value: '启蒙' },
-  { label: '体能', value: '体能' },
-  { label: '战术', value: '战术' },
-  { label: '门将', value: '门将' },
-  { label: '进攻', value: '进攻' },
-  { label: '防守', value: '防守' },
-];
-
-// 年龄段选项
-const AGE_GROUP_OPTIONS = [
-  { label: 'U6', value: 'U6' },
-  { label: 'U8', value: 'U8' },
-  { label: 'U10', value: 'U10' },
-  { label: 'U12', value: 'U12' },
-  { label: 'U14', value: 'U14' },
-  { label: 'U16', value: 'U16' },
-];
 
 const CoachManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -127,10 +114,6 @@ const CoachManagement: React.FC = () => {
         <Avatar
           size={40}
           src={avatar}
-          icon={record.gender === 1 ? <ManOutlined /> : <WomanOutlined />}
-          style={{
-            backgroundColor: record.gender === 1 ? '#1890ff' : '#eb2f96',
-          }}
         />
       ),
     },
@@ -149,11 +132,11 @@ const CoachManagement: React.FC = () => {
     },
     {
       title: '联系方式',
-      width: 150,
+      width: 180,
       render: (_, record) => (
         <Space direction="vertical" size={0}>
-          <span>{record.phone || '-'}</span>
-          <span style={{ fontSize: 12, color: '#999' }}>{record.email || '-'}</span>
+          <span><PhoneOutlined style={{ marginRight: 4, color: '#07C160' }} />{record.phone || '-'}</span>
+          <span style={{ fontSize: 12, color: '#999' }}><MailOutlined style={{ marginRight: 4, color: '#1677FF' }} />{record.email || '-'}</span>
         </Space>
       ),
     },
@@ -164,27 +147,46 @@ const CoachManagement: React.FC = () => {
       search: false,
       render: (years) => <span>{years} 年</span>,
     },
+    getStatusColumn<any>({
+      updateApi: updateCoach,
+      actionRef,
+    }),
     {
       title: '专项擅长',
       dataIndex: 'specialties',
-      width: 180,
+      width: 200,
       valueType: 'select',
       fieldProps: {
         options: SPECIALTY_OPTIONS,
       },
       render: (specialties) => {
-        if (!specialties || !Array.isArray(specialties) || specialties.length === 0) {
+        // 兼容多种数据格式：数组、JSON字符串、逗号分隔字符串
+        const text = specialties?.props?.text || [];
+
+        let arr: string[] = [];
+        if (Array.isArray(text)) {
+          arr = text as string[];
+        } else if (typeof text === 'string') {
+          // 尝试解析 JSON 字符串
+          if (text.startsWith('[')) {
+            try { arr = JSON.parse(text); } catch { }
+          } else if (text.trim()) {
+            // 逗号分隔
+            arr = text.split(',').map(s => s.trim()).filter(Boolean);
+          }
+        }
+        if (!arr || arr.length === 0) {
           return '-';
         }
         return (
           <Space size={[0, 4]} wrap>
-            {(specialties as string[]).slice(0, 3).map((specialty, index) => (
+            {arr.slice(0, 3).map((specialty, index) => (
               <Tag key={index} color="blue" style={{ fontSize: 11 }}>
                 {specialty}
               </Tag>
             ))}
-            {(specialties as string[]).length > 3 && (
-              <Tag style={{ fontSize: 11 }}>+{(specialties as string[]).length - 3}</Tag>
+            {arr.length > 3 && (
+              <Tag style={{ fontSize: 11 }}>+{arr.length - 3}</Tag>
             )}
           </Space>
         );
@@ -193,35 +195,29 @@ const CoachManagement: React.FC = () => {
     {
       title: '适合年龄段',
       dataIndex: 'ageGroups',
-      width: 150,
+      width: 190,
       valueType: 'select',
       fieldProps: {
         options: AGE_GROUP_OPTIONS,
       },
       render: (ageGroups) => {
-        if (!ageGroups || !Array.isArray(ageGroups) || ageGroups.length === 0) {
+        const text = ageGroups?.props?.text || [];
+        if (!text || !Array.isArray(text) || text.length === 0) {
           return '-';
         }
         return (
           <Space size={[0, 4]} wrap>
-            {(ageGroups as string[]).slice(0, 4).map((age, index) => (
+            {(text as string[]).slice(0, 3).map((age, index) => (
               <Tag key={index} color="green" style={{ fontSize: 11 }}>
                 {age}
               </Tag>
             ))}
-            {(ageGroups as string[]).length > 4 && (
-              <Tag style={{ fontSize: 11 }}>+{(ageGroups as string[]).length - 4}</Tag>
+            {(text as string[]).length > 3 && (
+              <Tag style={{ fontSize: 11 }}>+{(text as string[]).length - 3}</Tag>
             )}
           </Space>
         );
       },
-    },
-    {
-      title: '个人简介',
-      dataIndex: 'bio',
-      width: 200,
-      search: false,
-      ellipsis: true,
     },
     {
       title: '教学特色',
@@ -230,30 +226,7 @@ const CoachManagement: React.FC = () => {
       search: false,
       ellipsis: true,
     },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      width: 100,
-      valueType: 'select',
-      fieldProps: {
-        options: [
-          { label: '启用', value: 1 },
-          { label: '禁用', value: 0 },
-        ],
-      },
-      render: (status) => (
-        <Tag color={status === 1 ? 'success' : 'default'}>
-          {status === 1 ? '启用' : '禁用'}
-        </Tag>
-      ),
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createdAt',
-      width: 150,
-      valueType: 'dateTime',
-      search: false,
-    },
+    ...getTimeColumns<any>(),
     {
       title: '操作',
       key: 'action',

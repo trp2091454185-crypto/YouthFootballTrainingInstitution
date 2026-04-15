@@ -36,3 +36,41 @@ export const SCHOOLSTATUS = [
   { label: '休学', value: 3 },
   { label: '退学', value: 4 },
 ] as const;
+
+
+export const SPECIALTY_OPTIONS = [
+  { label: '启蒙', value: '启蒙' },
+  { label: '体能', value: '体能' },
+  { label: '战术', value: '战术' },
+  { label: '门将', value: '门将' },
+  { label: '进攻', value: '进攻' },
+  { label: '防守', value: '防守' },
+  { label: '传控', value: '传控' },
+  { label: '射门', value: '射门' },
+  { label: '盘带', value: '盘带' },
+  { label: '头球', value: '头球' },
+  { label: '定位球', value: '定位球' },
+  { label: '速度训练', value: '速度训练' },
+  { label: '力量训练', value: '力量训练' },
+  { label: '敏捷性', value: '敏捷性' },
+  { label: '协调性', value: '协调性' },
+  { label: '心理辅导', value: '心理辅导' },
+] as const;
+
+export const AGE_GROUP_OPTIONS = [
+  { label: 'U5', value: 'U5' },
+  { label: 'U6', value: 'U6' },
+  { label: 'U7', value: 'U7' },
+  { label: 'U8', value: 'U8' },
+  { label: 'U9', value: 'U9' },
+  { label: 'U10', value: 'U10' },
+  { label: 'U11', value: 'U11' },
+  { label: 'U12', value: 'U12' },
+  { label: 'U13', value: 'U13' },
+  { label: 'U14', value: 'U14' },
+  { label: 'U15', value: 'U15' },
+  { label: 'U16', value: 'U16' },
+  { label: 'U17', value: 'U17' },
+  { label: 'U18', value: 'U18' },
+  { label: 'U19', value: 'U19' },
+] as const;

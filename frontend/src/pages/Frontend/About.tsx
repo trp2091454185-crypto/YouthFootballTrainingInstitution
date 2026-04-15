@@ -30,7 +30,7 @@ const About: React.FC = () => {
                 SetHonorList(res?.data?.list || []);
             }
         } catch (error) {
-            console.error('获取核心优势失败:', error);
+            console.error('获取数据失败:', error);
         }
     };
 

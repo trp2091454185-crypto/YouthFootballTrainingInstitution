@@ -33,5 +33,6 @@ import (
 	"sys/user.api"
 	"frontend/home.api"
 	"frontend/about.api"
+	"frontend/coaches.api"
 )
 

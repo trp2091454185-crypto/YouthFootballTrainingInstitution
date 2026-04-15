@@ -17,34 +17,9 @@ import { createCoach, updateCoach, getCoachDetail, type Coach } from '@/services
 import { PageContainer } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
 import './Edit.less';
+import { AGE_GROUP_OPTIONS, GENDER, SPECIALTY_OPTIONS } from '@/utils/constant';
 
 const { Option } = Select;
-
-// 专项擅长选项
-const SPECIALTY_OPTIONS = [
-    { label: '启蒙', value: '启蒙' },
-    { label: '体能', value: '体能' },
-    { label: '战术', value: '战术' },
-    { label: '门将', value: '门将' },
-    { label: '进攻', value: '进攻' },
-    { label: '防守', value: '防守' },
-];
-
-// 年龄段选项
-const AGE_GROUP_OPTIONS = [
-    { label: 'U6', value: 'U6' },
-    { label: 'U8', value: 'U8' },
-    { label: 'U10', value: 'U10' },
-    { label: 'U12', value: 'U12' },
-    { label: 'U14', value: 'U14' },
-    { label: 'U16', value: 'U16' },
-];
-
-// 性别选项
-const GENDER_OPTIONS = [
-    { label: '男', value: 1 },
-    { label: '女', value: 2 },
-];
 
 const TeamEdit: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -88,7 +63,7 @@ const TeamEdit: React.FC = () => {
 
     // 返回列表页
     const handleBack = () => {
-        navigate('/team/management');
+        navigate('/team');
     };
 
     // 提交表单
@@ -111,7 +86,7 @@ const TeamEdit: React.FC = () => {
             if (res.success) {
                 message.success(isEdit ? '更新成功' : '创建成功');
                 setTimeout(() => {
-                    navigate('/team/management');
+                    navigate('/team');
                 }, 300);
             } else {
                 message.error(res.errorMessage || (isEdit ? '更新失败' : '创建失败'));
@@ -163,7 +138,7 @@ const TeamEdit: React.FC = () => {
                                                     rules={[{ required: true, message: '请选择性别' }]}
                                                 >
                                                     <Select placeholder="请选择性别">
-                                                        {GENDER_OPTIONS.map((opt) => (
+                                                        {GENDER.map((opt) => (
                                                             <Option key={opt.value} value={opt.value}>
                                                                 {opt.label}
                                                             </Option>
@@ -208,6 +183,7 @@ const TeamEdit: React.FC = () => {
                                                     name="phone"
                                                     label="联系电话"
                                                     rules={[
+                                                        { required: true, message: '请输入联系电话' },
                                                         { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号' },
                                                     ]}
                                                 >
@@ -272,7 +248,7 @@ const TeamEdit: React.FC = () => {
                                                     <Input.TextArea
                                                         placeholder="请输入教学特色，如教学风格、训练方法等"
                                                         rows={3}
-                                                        maxLength={500}
+                                                        maxLength={100}
                                                         showCount
                                                     />
                                                 </Form.Item>
@@ -285,7 +261,7 @@ const TeamEdit: React.FC = () => {
                                                     <Input.TextArea
                                                         placeholder="请输入个人简介"
                                                         rows={4}
-                                                        maxLength={1000}
+                                                        maxLength={300}
                                                         showCount
                                                     />
                                                 </Form.Item>
@@ -307,6 +283,7 @@ const TeamEdit: React.FC = () => {
                                                 <Form.Item
                                                     name="avatar"
                                                     label="头像链接"
+                                                    rules={[{ required: true, message: '请上传头像' }]}
                                                 >
                                                     <Input placeholder="请输入头像图片URL" maxLength={500} />
                                                 </Form.Item>
