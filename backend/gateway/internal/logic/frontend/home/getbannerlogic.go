@@ -51,12 +51,17 @@ func (l *GetBannerLogic) GetBanner() (*ListBannerResp, error) {
 		// 每遍历一条，创建一个新的 CoreModel 对象
 		core := ModelBanner{
 			Title:    *item.Title,
-			Subtitle: *item.Subtitle,
 			ImageUrl: item.Image,
 			LinkType: item.LinkType,
-			LinkUrl:  *item.LinkURL,
 			Target:   *item.Target,
 		}
+		if item.Subtitle != nil {
+			core.Subtitle = *item.Subtitle
+		}
+		if item.LinkURL != nil {
+			core.LinkUrl = *item.LinkURL
+		}
+
 		list = append(list, core)
 	}
 	return &ListBannerResp{List: list}, nil

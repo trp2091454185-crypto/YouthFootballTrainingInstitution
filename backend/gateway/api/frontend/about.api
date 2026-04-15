@@ -1,0 +1,12 @@
+syntax = "v1"
+
+
+@server(
+    group: frontend/about
+    prefix: /api/v1/frontend/about
+)
+service gateway {
+    //获取荣誉奖项展示信息
+    @handler GetHonor
+    get /honor
+}

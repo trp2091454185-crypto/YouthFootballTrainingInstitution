@@ -50,7 +50,9 @@ func (l *GetCoreStrengthsLogic) GetCoreStrengths() (*ListCoreStrengthsResp, erro
 		core := CoreModel{
 			Icon:  *item.Icon,
 			Title: item.Title,
-			Desc:  *item.Description,
+		}
+		if item.Description != nil {
+			core.Desc = *item.Description
 		}
 		list = append(list, core)
 	}

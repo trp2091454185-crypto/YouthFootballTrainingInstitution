@@ -32,5 +32,6 @@ import (
 	"sys/operationLog.api"
 	"sys/user.api"
 	"frontend/home.api"
+	"frontend/about.api"
 )
 

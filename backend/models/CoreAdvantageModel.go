@@ -15,7 +15,7 @@ type CoreAdvantage struct {
 	Icon        *string   `json:"icon,optional" form:"icon,optional" gorm:"column:icon"`                          // 图标类名或URL
 	Image       *string   `json:"image,optional" form:"image,optional" gorm:"column:image"`                       // 配图
 	SortOrder   int32     `json:"sortOrder,optional" form:"sortOrder,optional" gorm:"column:sort_order;not null"` // 排序号
-	Status      int32     `json:"status,optional" form:"status,optional" gorm:"column:status;not null;default:2"` // 状态:0隐藏 1显示
+	Status      int32     `json:"status,optional" form:"status,optional" gorm:"column:status;not null;default:1"` // 状态:0隐藏 1显示
 	CreatedAt   time.Time `json:"createdAt,optional" form:"createdAt,optional" gorm:"column:created_at;not null"` // 创建时间
 	UpdatedAt   time.Time `json:"updatedAt,optional" form:"updatedAt,optional" gorm:"column:updated_at;not null"` // 更新时间
 }

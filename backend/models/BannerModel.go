@@ -18,7 +18,7 @@ type Banner struct {
 	LinkPage  *string    `json:"linkPage,optional" form:"linkPage,optional" gorm:"column:link_page"`                    // 内部页面标识
 	Target    *string    `json:"target,optional" form:"target,optional" gorm:"column:target;default:_self"`             // 打开方式:_self/_blank
 	SortOrder int32      `json:"sortOrder,optional" form:"sortOrder,optional" gorm:"column:sort_order;default:0"`       // 排序号
-	Status    int32      `json:"status,optional" form:"status,optional" gorm:"column:status;not null;default:2"`        // 状态:0隐藏 1显示
+	Status    int32      `json:"status,optional" form:"status,optional" gorm:"column:status;not null;default:1"`        // 状态:0隐藏 1显示
 	StartTime *time.Time `json:"startTime,optional" form:"startTime,optional" gorm:"column:start_time"`                 // 开始时间
 	EndTime   *time.Time `json:"endTime,optional" form:"endTime,optional" gorm:"column:end_time"`                       // 结束时间
 	CreatedAt time.Time  `json:"createdAt,optional" form:"createdAt,optional" gorm:"time;column:created_at"`            // 创建时间
