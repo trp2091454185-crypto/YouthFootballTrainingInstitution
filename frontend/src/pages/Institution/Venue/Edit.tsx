@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, message } from 'antd';
-import type { CoreAdvantage } from '@/services/home';
-import { createCoreAdvantage, updateCoreAdvantage } from '@/services/home';
-import IconSelect from '@/components/IconsSelect';
+import { Modal, Form, Input, InputNumber, Select, message } from 'antd';
+import type { InstitutionFacility } from '@/services/institution';
+import { createFacility, updateFacility } from '@/services/institution';
 
-const { TextArea } = Input;
-
-export interface CoreAdvantageFormProps {
+export interface VenueEditModalProps {
     /** 模态框可见性 */
     visible: boolean;
     /** 当前编辑的记录（新建时为 null） */
-    record?: CoreAdvantage | null;
+    record?: InstitutionFacility | null;
     /** 关闭回调 */
     onClose: () => void;
     /** 提交成功后的回调 */
     onSuccess: () => void;
 }
 
-const CoreAdvantageForm: React.FC<CoreAdvantageFormProps> = ({
+const VenueEditModal: React.FC<VenueEditModalProps> = ({
     visible,
     record,
     onClose,
@@ -32,10 +29,9 @@ const CoreAdvantageForm: React.FC<CoreAdvantageFormProps> = ({
         if (visible) {
             if (record) {
                 form.setFieldsValue({
-                    title: record.title,
+                    name: record.name,
                     description: record.description,
-                    icon: record.icon,
-                    image: record.image,
+                    images: record.images || '',
                 });
             } else {
                 form.resetFields();
@@ -55,11 +51,16 @@ const CoreAdvantageForm: React.FC<CoreAdvantageFormProps> = ({
             const values = await form.validateFields();
             setSubmitting(true);
 
+            // 处理数组字段转换
+            const submitData: InstitutionFacility = {
+                ...values,
+            };
+
             let res;
             if (isEdit && record?.id) {
-                res = await updateCoreAdvantage(record.id, values as CoreAdvantage);
+                res = await updateFacility(record.id, submitData);
             } else {
-                res = await createCoreAdvantage(values as CoreAdvantage);
+                res = await createFacility(submitData);
             }
 
             if (res.success) {
@@ -79,13 +80,12 @@ const CoreAdvantageForm: React.FC<CoreAdvantageFormProps> = ({
 
     return (
         <Modal
-            title={isEdit ? '编辑核心优势' : '新增核心优势'}
+            title={isEdit ? '编辑场地设施' : '新增场地设施'}
             open={visible}
             onCancel={handleClose}
             onOk={handleSubmit}
             confirmLoading={submitting}
-            width={560}
-            destroyOnClose
+            width={600}
             afterClose={() => form.resetFields()}
         >
             <Form
@@ -94,31 +94,41 @@ const CoreAdvantageForm: React.FC<CoreAdvantageFormProps> = ({
                 style={{ marginTop: 16 }}
             >
                 <Form.Item
-                    name="title"
-                    label="标题"
-                    rules={[{ required: true, message: '请输入标题' }]}
+                    name="name"
+                    label="场地名称"
+                    rules={[{ required: true, message: '请输入场地名称' }]}
                 >
-                    <Input placeholder="请输入核心优势标题" maxLength={50} showCount />
+                    <Input placeholder="请输入场地名称，如：主训练场" maxLength={100} showCount />
                 </Form.Item>
 
-                <Form.Item
-                    name="icon"
-                    label="图标"
-                    rules={[{ required: true, message: '请选择图标' }]}
-                >
-                    <IconSelect />
-                </Form.Item>
+
                 <Form.Item
                     name="description"
-                    label="描述"
+                    label="场地描述"
                 >
-                    <TextArea placeholder="请输入描述" rows={3} maxLength={200} showCount />
+                    <Input.TextArea
+                        placeholder="请输入场地描述，如场地面积、配套设施等详细信息"
+                        rows={4}
+                        maxLength={500}
+                        showCount
+                    />
                 </Form.Item>
-
+                <Form.Item
+                    name="images"
+                    label="场地图片"
+                    extra="每行输入一个图片URL地址，支持多个图片"
+                >
+                    <Input.TextArea
+                        placeholder="请输入图片URL，每行一个地址"
+                        rows={3}
+                        maxLength={1000}
+                        showCount
+                    />
+                </Form.Item>
 
             </Form>
         </Modal>
     );
 };
 
-export default CoreAdvantageForm;
+export default VenueEditModal;

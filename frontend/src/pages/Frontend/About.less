@@ -129,29 +129,77 @@
         }
     }
 
-    .awards-card {
+    .honor-card {
         border-radius: 16px !important;
         border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
 
-        :global(.ant-timeline-item-content) {
-            min-height: auto;
+        &:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(46, 125, 50, 0.15);
         }
 
-        .timeline-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+        .honor-image-wrapper {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
 
-            .timeline-year {
-                font-size: 16px;
-                color: #212121;
-                min-width: 52px;
+            .honor-image {
+                width: 100%;
+                height: 100%;
+                border-radius: 4px;
+                object-fit: cover;
+                transition: transform 0.4s ease;
             }
 
-            .timeline-desc {
-                font-size: 14px;
+            &:hover .honor-image {
+                transform: scale(1.05);
+            }
+
+            .honor-date-badge {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+                color: #fff;
+                padding: 6px 14px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 600;
+                box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+            }
+        }
+
+        .honor-content {
+            padding: 20px;
+
+            .honor-title {
+                color: #1B5E20 !important;
+                margin-bottom: 10px !important;
+                font-size: 18px !important;
+                font-weight: 600 !important;
+            }
+
+            .honor-org {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 12px;
+                font-size: 13px;
+            }
+
+            .honor-desc {
                 color: #616161;
+                font-size: 14px;
+                line-height: 1.7;
+                margin-bottom: 0 !important;
+            }
+
+            .honor-desc-empty {
+                font-size: 14px;
+                font-style: italic;
+                opacity: 0.6;
             }
         }
     }

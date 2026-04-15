@@ -1,31 +1,39 @@
-import React, { useEffect } from 'react';
-import { Row, Col, Card, Timeline, Typography, Image, Tag } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Row, Col, Card, Typography, Image, Tag } from 'antd';
 import {
     ApartmentOutlined,
     TrophyOutlined,
     EnvironmentOutlined,
     SafetyCertificateOutlined,
-    HistoryOutlined,
     TeamOutlined,
 } from '@ant-design/icons';
 import './About.less';
+import { getFrontHonorList } from '@/services/frontend';
+import dayjs from 'dayjs';
 
 const { Title, Paragraph, Text } = Typography;
 
 const About: React.FC = () => {
+    //奖项数据
+    const [honorList, SetHonorList] = useState<any[]>([]);
 
     useEffect(() => {
         document.title = '机构介绍';
+        fetchHonorList()
     }, []);
 
+    // 获取荣誉奖项数据
+    const fetchHonorList = async () => {
+        try {
+            const res = await getFrontHonorList();
+            if (res?.success) {
+                SetHonorList(res?.data?.list || []);
+            }
+        } catch (error) {
+            console.error('获取核心优势失败:', error);
+        }
+    };
 
-    const awards = [
-        { year: '2024', desc: '全国青少年足球联赛省级冠军', tag: '金奖' },
-        { year: '2023', desc: '市级最佳青训机构荣誉称号', tag: '荣誉' },
-        { year: '2022', desc: '全国校园足球优秀培训机构', tag: '国家级' },
-        { year: '2021', desc: '省足协认证三星级青训基地', tag: '认证' },
-        { year: '2020', _desc: '成立绿茵足球青训中心', tag: '里程碑' },
-    ];
 
     return (
         <div className="about-page">
@@ -73,26 +81,49 @@ const About: React.FC = () => {
             </section>
 
             {/* 荣誉奖项区块 */}
-            <section className="awards-section">
+            {honorList?.length > 0 && <section className="awards-section">
                 <div className="section-header">
-                    <HistoryOutlined className="section-icon" />
-                    <Title level={2} className="section-title">发展历程与荣誉</Title>
+                    <TrophyOutlined className="section-icon" />
+                    <Title level={2} className="section-title">荣誉奖项</Title>
                 </div>
-                <Card className="awards-card">
-                    <Timeline
-                        items={awards.map((award) => ({
-                            color: award.tag === '国家级' ? '#FF5722' : '#2E7D32',
-                            children: (
-                                <div className="timeline-item">
-                                    <Tag color={award.tag === '国家级' ? '#FF5722' : '#2E7D32'}>{award.tag}</Tag>
-                                    <Text strong className="timeline-year">{award.year}</Text>
-                                    <Text className="timeline-desc">{award.desc}</Text>
+                <Row gutter={[24, 24]}>
+                    {honorList.map((award, index) => (
+                        <Col xs={24} sm={12} lg={8} key={index}>
+                            <Card className="honor-card">
+                                <div className="honor-image-wrapper">
+                                    {award.image ? (
+                                        <Image
+                                            src={award.image}
+                                            alt={award.title}
+                                            className="honor-image"
+                                            preview={{ mask: '查看大图' }}
+                                        />
+                                    ) : (
+                                        <div className="honor-image-fallback">
+                                            <TrophyOutlined />
+                                            <span>暂无图片</span>
+                                        </div>
+                                    )}
                                 </div>
-                            ),
-                        }))}
-                    />
-                </Card>
-            </section>
+                                <div className="honor-content">
+                                    <Title level={4} className="honor-title">{award.title}</Title>
+                                    <div className="honor-org">
+                                        <Text type="secondary">颁发机构：{award.org}</Text>
+                                        <Text type="secondary">{dayjs(award.honorData).format("YYYY-MM-DD")}</Text>
+                                    </div>
+                                    {award.desc ? (
+                                        <Paragraph className="honor-desc" ellipsis={{ rows: 3, expandable: true, symbol: '展开' }}>
+                                            {award.desc}
+                                        </Paragraph>
+                                    ) : (
+                                        <Text type="secondary" className="honor-desc-empty">暂无描述</Text>
+                                    )}
+                                </div>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            </section>}
 
             {/* 场地设施区块 */}
             <section className="venue-section">

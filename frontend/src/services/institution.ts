@@ -118,8 +118,8 @@ export const updateMilestoneSort = (id: string, sortOrder: number) => {
 // ==================== 场地设施 API ====================
 
 // 获取场地设施列表
-export const getFacilityList = (params?: { status?: number }) => {
-  return request('/api/institution/facility/list', {
+export const getFacilityList = (params: any) => {
+  return request('/api/v1/institution/facility', {
     method: 'GET',
     params,
   });
@@ -127,7 +127,7 @@ export const getFacilityList = (params?: { status?: number }) => {
 
 // 创建场地设施
 export const createFacility = (data: InstitutionFacility) => {
-  return request('/api/institution/facility/create', {
+  return request('/api/v1/institution/facility', {
     method: 'POST',
     data,
   });
@@ -135,7 +135,7 @@ export const createFacility = (data: InstitutionFacility) => {
 
 // 更新场地设施
 export const updateFacility = (id: string, data: InstitutionFacility) => {
-  return request(`/api/institution/facility/update/${id}`, {
+  return request(`/api/v1/institution/facility/${id}`, {
     method: 'PUT',
     data,
   });
@@ -143,7 +143,7 @@ export const updateFacility = (id: string, data: InstitutionFacility) => {
 
 // 删除场地设施
 export const deleteFacility = (id: string) => {
-  return request(`/api/institution/facility/delete/${id}`, {
+  return request(`/api/v1/institution/facility/${id}`, {
     method: 'DELETE',
   });
 };

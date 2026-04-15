@@ -93,6 +93,18 @@ export default [
             component: './Team/Management',
           },
           {
+            path: '/team/management/create',
+            name: '新增教练',
+            component: './Team/components/Edit',
+            hideInMenu: true,
+          },
+          {
+            path: '/team/management/edit/:id',
+            name: '编辑教练',
+            component: './Team/components/Edit',
+            hideInMenu: true,
+          },
+          {
             path: '/team/resume',
             name: '教练履历',
             component: './Team/Resume',

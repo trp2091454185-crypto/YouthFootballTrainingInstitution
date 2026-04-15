@@ -11,3 +11,9 @@ export const getBannerList = () => {
         method: 'GET',
     });
 };
+
+export const getFrontHonorList = () => {
+    return request('/api/v1/frontend/about/honor', {
+        method: 'GET',
+    });
+};
