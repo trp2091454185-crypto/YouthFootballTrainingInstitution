@@ -1,116 +1,166 @@
 .registration-page {
-    background: #fafafa;
-
-    .reg-hero {
-        background: linear-gradient(135deg, #2E7D32 0%, #43A047 50%, #66BB6A 100%);
-        padding: 60px 40px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: -30%;
-            right: -10%;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .hero-icon {
-            font-size: 44px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 14px;
-        }
-
-        .hero-title {
-            color: #ffffff !important;
-            font-size: 36px !important;
-            font-weight: 700 !important;
-            margin-bottom: 12px !important;
-        }
-
-        .hero-desc {
-            color: rgba(255, 255, 255, 0.9) !important;
-            font-size: 16px !important;
-        }
-    }
+    background: #f5f7fa;
+    min-height: 100vh;
 
     .reg-content {
-        padding: 48px 40px 80px;
+        padding: 40px 24px 80px;
 
         .reg-container {
-            max-width: 1100px;
+            max-width: 1160px;
             margin: 0 auto;
         }
     }
 
+    // ========== 表单卡片 ==========
     .form-card {
-        border-radius: 20px !important;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06) !important;
+        border-radius: 16px !important;
+        box-shadow:
+            0 1px 3px rgba(0, 0, 0, 0.04),
+            0 4px 16px rgba(0, 0, 0, 0.06) !important;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        overflow: hidden;
 
         .form-title {
-            font-size: 22px !important;
+            font-size: 19px !important;
             font-weight: 700 !important;
-            color: #1B5E20 !important;
+            color: #1a1a2e !important;
             margin-bottom: 4px !important;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+
+            .anticon {
+                color: #2e7d32;
+                font-size: 20px;
+            }
         }
 
         .form-subtitle {
-            color: #9E9E9E !important;
-            margin-bottom: 28px !important;
+            color: #8c8c8c !important;
+            margin-bottom: 24px !important;
+            font-size: 13px;
         }
 
+        // 表单全局样式
         .reg-form {
-            :global(.ant-form-item-label > label) {
-                font-weight: 500;
-                color: #424242;
+            padding-bottom: 4px;
+
+            :global(.ant-form-item) {
+                margin-bottom: 20px;
             }
 
-            :global(.ant-input),
-            :global(.ant-select-selector),
-            :global(.ant-input-affix-wrapper) {
-                border-radius: 10px !important;
-                border: 1.5px solid #e0e0e0 !important;
-                transition: all 0.3s ease;
+            :global(.ant-form-item-label > label) {
+                font-weight: 600;
+                font-size: 13px;
+                color: #434343;
+                letter-spacing: 0.02em;
+                height: auto;
+                padding-bottom: 4px;
 
-                &:hover,
-                &:focus {
-                    border-color: #2E7D32 !important;
-                    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.08) !important;
+                &.ant-form-item-required::before {
+                    color: #ff4d4f;
                 }
             }
 
-            .submit-btn {
-                height: 50px;
-                font-size: 16px;
-                font-weight: 600;
-                border-radius: 12px !important;
-                background: linear-gradient(135deg, #2E7D32 0%, #43A047 100%) !important;
-                border: none !important;
-                margin-top: 8px;
-                transition: all 0.3s ease;
+            // 输入框统一样式
+            :global(.ant-input),
+            :global(.ant-select-selector),
+            :global(.ant-input-affix-wrapper),
+            :global(.ant-picker) {
+                border-radius: 10px !important;
+                border: 1.5px solid #d9d9d9 !important;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                min-height: 38px;
 
                 &:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.35);
+                    border-color: #52c41a !important;
+                    box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.08) !important;
+                }
+
+                &:focus,
+                &.ant-select-focused,
+                &.ant-picker-focused {
+                    border-color: #52c41a !important;
+                    box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.12) !important;
+                }
+            }
+
+            :global(.ant-input-prefix) {
+                color: #bfbfbf;
+                margin-right: 10px;
+            }
+
+            :global(.ant-input-affix-wrapper:hover .ant-input-prefix),
+            :global(.ant-input-affix-wrapper-focused .ant-input-prefix) {
+                color: #52c41a;
+            }
+
+            :global(.ant-select-selection-placeholder) {
+                color: #bfbfbf;
+            }
+
+            // 下拉箭头
+            :global(.ant-select-arrow) {
+                color: #bfbfbf;
+            }
+
+            // TextArea 字数统计
+            :global(.ant-input-data-count) {
+                font-size: 12px;
+                color: #bfbfbf;
+            }
+
+            // ========== 分区块样式 ==========
+            .form-section {
+                background: #fafbfc;
+                border-radius: 14px;
+                padding: 24px 24px 8px;
+                margin-bottom: 20px;
+                border: 1px solid #f0f0f0;
+                transition: box-shadow 0.3s ease;
+
+                &:hover {
+                    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+                }
+
+            }
+
+            // 提交区域
+            .submit-wrapper {
+                margin-top: 28px !important;
+                margin-bottom: 8px !important;
+
+                .submit-btn {
+                    height: 44px;
+                    font-size: 15px;
+                    font-weight: 600;
+                    border-radius: 12px !important;
+                    background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%) !important;
+                    border: none !important;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 24px rgba(46, 125, 50, 0.35) !important;
+                        background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%) !important;
+                    }
+
+                    &:active {
+                        transform: translateY(0);
+                    }
+                }
+
+                .submit-hint {
+                    text-align: center;
+                    margin: 12px 0 0;
+                    font-size: 13px;
+                    color: #8c8c8c;
                 }
             }
         }
     }
 
+    // ========== 侧边栏 ==========
     .sidebar {
         display: flex;
         flex-direction: column;
@@ -118,55 +168,92 @@
 
         .contact-card {
             border-radius: 16px !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
-            background: linear-gradient(180deg, #ffffff 0%, #F1F8E9 100%);
+            box-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.04),
+                0 4px 16px rgba(0, 0, 0, 0.06) !important;
+            background: linear-gradient(180deg, #ffffff 0%, #f6fff5 100%);
+            border: 1px solid rgba(46, 125, 50, 0.08);
 
             .sidebar-title {
-                font-size: 18px !important;
+                font-size: 15px !important;
                 font-weight: 700 !important;
-                color: #1B5E20 !important;
+                color: #1b5e20 !important;
                 margin-bottom: 24px !important;
+                position: relative;
+                padding-left: 14px;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 4px;
+                    height: 18px;
+                    border-radius: 2px;
+                    background: linear-gradient(180deg, #2e7d32, #4caf50);
+                }
             }
 
             .contact-list {
                 display: flex;
                 flex-direction: column;
-                gap: 20px;
+                gap: 18px;
 
                 .contact-item {
                     display: flex;
                     align-items: flex-start;
                     gap: 14px;
+                    padding: 12px;
+                    border-radius: 12px;
+                    transition: background 0.2s ease;
+
+                    &:hover {
+                        background: rgba(46, 125, 50, 0.04);
+                    }
 
                     .contact-icon {
-                        width: 44px;
-                        height: 44px;
-                        border-radius: 12px;
+                        width: 38px;
+                        height: 38px;
+                        border-radius: 11px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        font-size: 18px;
+                        font-size: 15px;
                         color: #fff;
                         flex-shrink: 0;
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 
-                        &.phone { background: linear-gradient(135deg, #2E7D32, #4CAF50); }
-                        &.address { background: linear-gradient(135deg, #1565C0, #42A5F5); }
-                        &.email { background: linear-gradient(135deg, #E65100, #FF7043); }
-                        &.time { background: linear-gradient(135deg, #6A1B9A, #AB47BC); }
+                        &.phone {
+                            background: linear-gradient(135deg, #2E7D32, #66BB6A);
+                        }
+
+                        &.address {
+                            background: linear-gradient(135deg, #1565C0, #64B5F6);
+                        }
+
+                        &.email {
+                            background: linear-gradient(135deg, #E65100, #FF9800);
+                        }
+
+                        &.time {
+                            background: linear-gradient(135deg, #6A1B9A, #BA68C8);
+                        }
                     }
 
                     .contact-detail {
                         strong {
                             display: block;
-                            font-size: 14px;
-                            color: #212121;
+                            font-size: 13px;
+                            color: #262626;
                             margin-bottom: 4px;
+                            font-weight: 600;
                         }
 
                         p {
                             margin: 0;
                             font-size: 13px;
-                            color: #616161;
+                            color: #595959;
                             line-height: 1.7;
                         }
                     }
@@ -176,33 +263,90 @@
 
         .tip-card {
             border-radius: 16px !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+            box-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.04),
+                0 4px 16px rgba(0, 0, 0, 0.06) !important;
+            border: 1px solid rgba(230, 81, 0, 0.08);
+            overflow: hidden;
 
             h5 {
-                color: #E65100 !important;
-                font-size: 16px !important;
-                margin-bottom: 12px !important;
+                color: #e65100 !important;
+                font-size: 14px !important;
+                margin-bottom: 14px !important;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                &::before {
+                    content: '💡';
+                    font-size: 16px;
+                }
             }
 
             .tips-list {
                 margin: 0;
-                padding-left: 18px;
+                padding-left: 0;
                 list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
 
                 li {
                     position: relative;
                     font-size: 13px;
-                    color: #616161;
-                    line-height: 2;
-                    padding-left: 12px;
+                    color: #595959;
+                    line-height: 1.7;
+                    padding: 6px 0 6px 22px;
+                    border-radius: 6px;
+                    transition: background 0.2s ease;
+
+                    &:hover {
+                        background: rgba(230, 81, 0, 0.03);
+                    }
 
                     &::before {
-                        content: '•';
+                        content: '✦';
                         position: absolute;
-                        left: 0;
-                        color: #4CAF50;
-                        font-weight: bold;
+                        left: 6px;
+                        color: #ff9800;
+                        font-size: 11px;
+                        top: 6px;
                     }
+                }
+            }
+        }
+    }
+}
+
+// 响应式
+@media screen and (max-width: 992px) {
+    .registration-page {
+        .reg-content {
+            padding: 28px 16px 60px;
+        }
+
+        .sidebar {
+            margin-top: 8px;
+        }
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .registration-page {
+        .form-card {
+            border-radius: 12px !important;
+
+            .reg-form {
+                .form-section {
+                    padding: 18px 16px 4px;
+                    border-radius: 12px;
+                }
+
+                .submit-wrapper .submit-btn {
+                    height: 40px;
+                    font-size: 14px;
+                    border-radius: 10px !important;
                 }
             }
         }

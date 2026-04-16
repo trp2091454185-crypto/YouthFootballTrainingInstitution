@@ -31,22 +31,15 @@ export interface Course {
   price: number;
   priceUnit: 'course' | 'hour'; // course期/hour课时
   description?: string;
-  outline?: CourseOutline[];
+  outline?: string[];
   objectives?: string[];
   features?: string[];
   requirements?: string;
   equipment?: string;
   sortOrder: number;
-  status: 0 | 1; // 0下架 1上架
+  status: number;
   createdAt?: string;
   updatedAt?: string;
-}
-
-export interface CourseOutline {
-  phase: string;
-  title: string;
-  content: string;
-  hours: number;
 }
 
 // 班级表 (course_class)

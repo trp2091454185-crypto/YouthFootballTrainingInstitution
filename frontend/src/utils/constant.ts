@@ -74,3 +74,16 @@ export const AGE_GROUP_OPTIONS = [
   { label: 'U18', value: 'U18' },
   { label: 'U19', value: 'U19' },
 ] as const;
+
+// 了解渠道枚举
+export const CHANNEL = [
+  { label: '朋友推荐', value: 'friendReferral' },
+  { label: '网络搜索', value: 'searchEngine' },
+  { label: '社交媒体', value: 'socialMedia' },
+  { label: '线下广告', value: 'offlineAd' },
+  { label: '学校宣传', value: 'schoolPromo' },
+  { label: '赛事活动', value: 'event' },
+  { label: '其他', value: 'other' },
+] as const;
+
+

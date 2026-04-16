@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Card, Form, Input, Select, Button, Typography, message, Divider } from 'antd';
+import { Row, Col, Card, Form, Input, Select, Button, Typography, message, DatePicker } from 'antd';
 import {
     EditOutlined,
     PhoneOutlined,
@@ -8,8 +8,10 @@ import {
     ClockCircleOutlined,
     SendOutlined,
 } from '@ant-design/icons';
-import useNavigate from '@umijs/max';
+import dayjs from 'dayjs';
+import { AGE_GROUP_OPTIONS, CHANNEL, GENDER } from '@/utils/constant';
 import './Registration.less';
+import locale from 'antd/es/date-picker/locale/zh_CN';
 
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
@@ -28,17 +30,6 @@ const Registration: React.FC = () => {
 
     return (
         <div className="registration-page">
-            {/* 报名头部区域 */}
-            <section className="reg-hero">
-                <div className="hero-content">
-                    <EditOutlined className="hero-icon" />
-                    <Title level={1} className="hero-title">报名咨询</Title>
-                    <Paragraph className="hero-desc">
-                        填写下方表单即可完成在线报名，我们将尽快安排试训体验
-                    </Paragraph>
-                </div>
-            </section>
-
             <section className="reg-content">
                 <div className="reg-container">
                     <Row gutter={[40, 40]} align="stretch">
@@ -54,110 +45,157 @@ const Registration: React.FC = () => {
                                     form={form}
                                     layout="vertical"
                                     onFinish={onFinish}
-                                    requiredMark="optional"
                                     className="reg-form"
                                 >
-                                    <Row gutter={16}>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                name="studentName"
-                                                label="学员姓名"
-                                                rules={[{ required: true, message: '请输入学员姓名' }]}
-                                            >
-                                                <Input placeholder="请输入学员姓名" size="large" prefix={<EditOutlined />} />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                name="gender"
-                                                label="性别"
-                                                rules={[{ required: true, message: '请选择性别' }]}
-                                            >
-                                                <Select placeholder="请选择性别" size="large">
-                                                    <Select.Option value="male">男</Select.Option>
-                                                    <Select.Option value="female">女</Select.Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                                    {/* 学员基本信息 */}
+                                    <div className="form-section">
+                                        <div className="section-header">
+                                            <span className="section-icon">👤</span>
+                                            <span className="section-title">学员基本信息</span>
+                                        </div>
+                                        <Row gutter={[24, 0]}>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    name="studentName"
+                                                    label="学员姓名"
+                                                    rules={[{ required: true, message: '请输入学员姓名' }]}
+                                                >
+                                                    <Input placeholder="请输入学员姓名" />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    name="gender"
+                                                    label="性别"
+                                                    rules={[{ required: true, message: '请选择性别' }]}
+                                                >
+                                                    <Select placeholder="请选择性别" options={GENDER.map(item => ({ label: item.label, value: item.value }))} />
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={[24, 0]}>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    name="birthDate"
+                                                    label="出生日期"
+                                                    rules={[{ required: true, message: '请选择出生日期' }]}
+                                                >
+                                                    <DatePicker
+                                                        style={{ width: '100%' }}
+                                                        placeholder="请选择日期"
+                                                        locale={locale}
+                                                        maxDate={dayjs(dayjs(), 'YYYY-MM-DD')}
+                                                        format="YYYY-MM-DD"
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    name="source"
+                                                    label="了解渠道"
+                                                >
+                                                    <Select placeholder="请选择了解渠道" options={CHANNEL.map(item => ({ label: item.label, value: item.value }))} />
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </div>
 
-                                    <Row gutter={16}>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                name="birthDate"
-                                                label="出生日期"
-                                                rules={[{ required: true, message: '请输入出生日期' }]}
-                                            >
-                                                <Input placeholder="如：2015-06" size="large" />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                name="intendedCourse"
-                                                label="意向课程"
-                                                rules={[{ required: true, message: '请选择意向课程' }]}
-                                            >
-                                                <Select placeholder="请选择意向课程" size="large">
-                                                    <Select.Option value="u8-basic">U8 快乐足球启蒙课</Select.Option>
-                                                    <Select.Option value="u8-tech">U8 基础技术入门课</Select.Option>
-                                                    <Select.Option value="u12-advance">U12 综合能力进阶课</Select.Option>
-                                                    <Select.Option value="u12-camp">U12 竞技强化训练营</Select.Option>
-                                                    <Select.Option value="u16-elite">U16 精英梯队训练</Select.Option>
-                                                    <Select.Option value="u16-special">U16 专项技能特训课</Select.Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                                    {/* 课程意向 */}
+                                    <div className="form-section">
+                                        <div className="section-header">
+                                            <span className="section-icon">⚽</span>
+                                            <span className="section-title">课程意向</span>
+                                        </div>
+                                        <Row gutter={[24, 0]}>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    name="intendedAgeGroup"
+                                                    label="意向年龄段"
+                                                    rules={[{ required: true, message: '请选择意向年龄段' }]}
+                                                >
+                                                    <Select placeholder="请选择年龄段" options={AGE_GROUP_OPTIONS.map(item => ({ label: item.label, value: item.value }))} />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    name="intendedCourse"
+                                                    label="意向课程"
+                                                    rules={[{ required: true, message: '请选择意向课程' }]}
+                                                >
+                                                    <Select placeholder="请选择意向课程">
+                                                        <Select.Option value="u8-basic">U8 快乐足球启蒙课</Select.Option>
+                                                        <Select.Option value="u8-tech">U8 基础技术入门课</Select.Option>
+                                                        <Select.Option value="u12-advance">U12 综合能力进阶课</Select.Option>
+                                                        <Select.Option value="u12-camp">U12 竞技强化训练营</Select.Option>
+                                                        <Select.Option value="u16-elite">U16 精英梯队训练</Select.Option>
+                                                        <Select.Option value="u16-special">U16 专项技能特训课</Select.Option>
+                                                    </Select>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Form.Item
+                                            name="expectations"
+                                            label="培养期望"
+                                            className="expectations-field"
+                                        >
+                                            <Input.TextArea placeholder="请描述您对孩子将来的培养方向和期望..." rows={3} maxLength={500} showCount />
+                                        </Form.Item>
+                                    </div>
 
-                                    <Divider plain>家长联系信息</Divider>
+                                    {/* 家长联系信息 */}
+                                    <div className="form-section">
+                                        <div className="section-header">
+                                            <span className="section-icon">📞</span>
+                                            <span className="section-title">家长联系信息</span>
+                                        </div>
+                                        <Row gutter={[24, 0]}>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    name="parentName"
+                                                    label="家长姓名"
+                                                    rules={[{ required: true, message: '请输入家长姓名' }]}
+                                                >
+                                                    <Input placeholder="请输入家长姓名" prefix={<EditOutlined />} />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    name="phone"
+                                                    label="联系电话"
+                                                    rules={[
+                                                        { required: true, message: '请输入联系电话' },
+                                                        { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确' },
+                                                    ]}
+                                                >
+                                                    <Input placeholder="请输入11位手机号" prefix={<PhoneOutlined />} maxLength={11} />
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                        <Form.Item
+                                            name="remark"
+                                            label="备注说明"
+                                            className="remark-field"
+                                        >
+                                            <TextArea
+                                                rows={3}
+                                                placeholder="如有特殊需求或想了解的内容，可在此备注..."
+                                                showCount
+                                                maxLength={300}
+                                            />
+                                        </Form.Item>
+                                    </div>
 
-                                    <Row gutter={16}>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                name="parentName"
-                                                label="家长姓名"
-                                                rules={[{ required: true, message: '请输入家长姓名' }]}
-                                            >
-                                                <Input placeholder="请输入家长姓名" size="large" />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                name="phone"
-                                                label="联系电话"
-                                                rules={[
-                                                    { required: true, message: '请输入联系电话' },
-                                                    { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确' },
-                                                ]}
-                                            >
-                                                <Input placeholder="请输入11位手机号" size="large" prefix={<PhoneOutlined />} maxLength={11} />
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-
-                                    <Form.Item
-                                        name="remark"
-                                        label="备注说明"
-                                    >
-                                        <TextArea
-                                            rows={4}
-                                            placeholder="如有特殊需求或想了解的内容，可在此备注..."
-                                            showCount
-                                            maxLength={300}
-                                        />
-                                    </Form.Item>
-
-                                    <Form.Item>
+                                    <Form.Item className="submit-wrapper">
                                         <Button
                                             type="primary"
                                             htmlType="submit"
-                                            size="large"
                                             block
                                             icon={<SendOutlined />}
                                             className="submit-btn"
                                         >
                                             提交报名申请
                                         </Button>
+                                        <p className="submit-hint">提交后我们将在 1-2 个工作日内与您联系</p>
                                     </Form.Item>
                                 </Form>
                             </Card>
@@ -168,7 +206,7 @@ const Registration: React.FC = () => {
                             <div className="sidebar">
                                 <Card className="contact-card" bordered={false}>
                                     <Title level={4} className="sidebar-title">联系我们</Title>
-                                    
+
                                     <div className="contact-list">
                                         <div className="contact-item">
                                             <div className="contact-icon phone">
@@ -179,12 +217,12 @@ const Registration: React.FC = () => {
                                                 <p>400-888-6688</p>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="contact-item">
                                             <div className="contact-icon address">
                                                 <EnvironmentOutlined />
                                             </div>
-                                            <div class="contact-detail">
+                                            <div className="contact-detail">
                                                 <Text strong>训练基地地址</Text>
                                                 <p>XX市体育中心绿茵青训基地<br />A馆主训练场</p>
                                             </div>
@@ -225,8 +263,8 @@ const Registration: React.FC = () => {
                         </Col>
                     </Row>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     );
 };
 

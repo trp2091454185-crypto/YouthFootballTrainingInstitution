@@ -36,3 +36,41 @@ func (s *StringSlice) Scan(value interface{}) error {
 
 	return json.Unmarshal(bytes, s)
 }
+
+// OutlineItem 课程大纲/教学目标/课程特色的单个项
+type OutlineItem struct {
+	Phase   string `json:"phase"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
+}
+
+// OutlineSlice 用于存储课程大纲等结构体数组的 JSON 类型
+type OutlineSlice []OutlineItem
+
+// Value 实现 driver.Valuer 接口，将 OutlineSlice 转为 JSON 字符串存入数据库
+func (s OutlineSlice) Value() (driver.Value, error) {
+	if s == nil {
+		return "[]", nil
+	}
+	return json.Marshal(s)
+}
+
+// Scan 实现 sql.Scanner 接口，从数据库读取 JSON 字符串并解析为 OutlineSlice
+func (s *OutlineSlice) Scan(value interface{}) error {
+	if value == nil {
+		*s = OutlineSlice{}
+		return nil
+	}
+
+	var bytes []byte
+	switch v := value.(type) {
+	case []byte:
+		bytes = v
+	case string:
+		bytes = []byte(v)
+	default:
+		return errors.New("type assertion to []byte failed")
+	}
+
+	return json.Unmarshal(bytes, s)
+}

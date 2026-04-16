@@ -40,5 +40,8 @@ func (t *Registration) BeforeCreate(*gorm.DB) error {
 	if t.Id == 0 {
 		t.Id = snowx.Flake.GenerateFlakeId()
 	}
+	if t.RegistrationNo == "" {
+		t.RegistrationNo = snowx.GenerateRegistrationNo()
+	}
 	return nil
 }

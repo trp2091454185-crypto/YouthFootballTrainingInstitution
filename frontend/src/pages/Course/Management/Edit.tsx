@@ -14,6 +14,7 @@ import {
     Image,
     Space,
     Tag,
+    Divider,
 } from 'antd';
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import { createCourse, updateCourse, getCourseDetail } from '@/services/course';
@@ -22,19 +23,10 @@ import { getCourseCategoryList } from '@/services/course';
 import './index.less';
 import { PageContainer } from '@ant-design/pro-components';
 import type { UploadFile } from 'antd/es/upload/interface';
+import { AGE_GROUP_OPTIONS } from '@/utils/constant';
 
 const { Option } = Select;
 const { TextArea } = Input;
-
-// 年龄段选项
-const AGE_GROUP_OPTIONS = [
-    { label: 'U6 (3-6岁)', value: 'U6', min: 3, max: 6 },
-    { label: 'U8 (6-8岁)', value: 'U8', min: 6, max: 8 },
-    { label: 'U10 (8-10岁)', value: 'U10', min: 8, max: 10 },
-    { label: 'U12 (10-12岁)', value: 'U12', min: 10, max: 12 },
-    { label: 'U14 (12-14岁)', value: 'U14', min: 12, max: 14 },
-    { label: 'U16 (14-16岁)', value: 'U16', min: 14, max: 16 },
-];
 
 // 价格单位选项
 const PRICE_UNIT_OPTIONS = [
@@ -42,11 +34,6 @@ const PRICE_UNIT_OPTIONS = [
     { label: '每课时', value: 'hour' },
 ];
 
-// 状态选项
-const STATUS_OPTIONS = [
-    { label: '已上架', value: 1 },
-    { label: '已下架', value: 0 },
-];
 
 const CourseEdit: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -57,6 +44,8 @@ const CourseEdit: React.FC = () => {
     const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
     const [coverImage, setCoverImage] = useState<string>('');
     const [outlines, setOutlines] = useState<CourseOutline[]>([]);
+    const [objectives, setObjectives] = useState<string[]>(['']);
+    const [features, setFeatures] = useState<string[]>(['']);
 
     const isEdit = !!id;
 
@@ -93,11 +82,11 @@ const CourseEdit: React.FC = () => {
                 const course = res.data;
                 form.setFieldsValue({
                     ...course,
-                    features: course.features?.join('\n') || '',
-                    objectives: course.objectives?.join('\n') || '',
                 });
                 setCoverImage(course.coverImage || '');
                 setOutlines(course.outline || []);
+                setObjectives(course.objectives && course.objectives.length > 0 ? course.objectives : ['']);
+                setFeatures(course.features && course.features.length > 0 ? course.features : ['']);
             } else {
                 message.error(res.errorMessage || '获取课程信息失败');
             }
@@ -113,20 +102,9 @@ const CourseEdit: React.FC = () => {
         navigate('/course/management');
     };
 
-    // 处理年龄段选择
-    const handleAgeGroupChange = (value: string) => {
-        const ageGroup = AGE_GROUP_OPTIONS.find(opt => opt.value === value);
-        if (ageGroup) {
-            form.setFieldsValue({
-                suitableAgeMin: ageGroup.min,
-                suitableAgeMax: ageGroup.max,
-            });
-        }
-    };
-
     // 添加课程大纲
     const handleAddOutline = () => {
-        setOutlines([...outlines, { phase: '', title: '', content: '', hours: 1 }]);
+        setOutlines([...outlines, { phase: '', title: '', content: '' }]);
     };
 
     // 删除课程大纲
@@ -141,6 +119,44 @@ const CourseEdit: React.FC = () => {
         setOutlines(newOutlines);
     };
 
+    // 添加课程目标
+    const handleAddObjective = () => {
+        setObjectives([...objectives, '']);
+    };
+
+    // 删除课程目标
+    const handleRemoveObjective = (index: number) => {
+        if (objectives.length > 1) {
+            setObjectives(objectives.filter((_, i) => i !== index));
+        }
+    };
+
+    // 更新课程目标
+    const handleObjectiveChange = (index: number, value: string) => {
+        const newObjectives = [...objectives];
+        newObjectives[index] = value;
+        setObjectives(newObjectives);
+    };
+
+    // 添加课程特色
+    const handleAddFeature = () => {
+        setFeatures([...features, '']);
+    };
+
+    // 删除课程特色
+    const handleRemoveFeature = (index: number) => {
+        if (features.length > 1) {
+            setFeatures(features.filter((_, i) => i !== index));
+        }
+    };
+
+    // 更新课程特色
+    const handleFeatureChange = (index: number, value: string) => {
+        const newFeatures = [...features];
+        newFeatures[index] = value;
+        setFeatures(newFeatures);
+    };
+
     // 提交表单
     const handleSubmit = async () => {
         try {
@@ -149,10 +165,9 @@ const CourseEdit: React.FC = () => {
 
             const submitData: Partial<Course> = {
                 ...values,
-                coverImage,
-                outline: outlines.filter(o => o.title.trim()),
-                features: values.features?.split('\n').filter((f: string) => f.trim()) || [],
-                objectives: values.objectives?.split('\n').filter((o: string) => o.trim()) || [],
+                                outline: outlines.filter(o => o.title.trim()),
+                features: features.filter(f => f.trim()),
+                objectives: objectives.filter(o => o.trim()),
             };
 
             let res;
@@ -213,15 +228,6 @@ const CourseEdit: React.FC = () => {
                                             {/* 课程编码 + 名称 */}
                                             <Col xs={24} sm={12}>
                                                 <Form.Item
-                                                    name="code"
-                                                    label="课程编码"
-                                                    rules={[{ required: true, message: '请输入课程编码' }]}
-                                                >
-                                                    <Input placeholder="如：COURSE001" maxLength={20} />
-                                                </Form.Item>
-                                            </Col>
-                                            <Col xs={24} sm={12}>
-                                                <Form.Item
                                                     name="name"
                                                     label="课程名称"
                                                     rules={[{ required: true, message: '请输入课程名称' }]}
@@ -249,65 +255,16 @@ const CourseEdit: React.FC = () => {
                                             <Col xs={24} sm={12}>
                                                 <Form.Item
                                                     name="ageGroupTag"
-                                                    label="年龄段"
+                                                    label="适合年龄段"
                                                     rules={[{ required: true, message: '请选择年龄段' }]}
                                                 >
-                                                    <Select placeholder="请选择年龄段" onChange={handleAgeGroupChange}>
+                                                    <Select placeholder="请选择年龄段">
                                                         {AGE_GROUP_OPTIONS.map((opt) => (
                                                             <Option key={opt.value} value={opt.value}>
                                                                 {opt.label}
                                                             </Option>
                                                         ))}
                                                     </Select>
-                                                </Form.Item>
-                                            </Col>
-
-                                            {/* 适合年龄（自动填充） */}
-                                            <Col xs={24} sm={12}>
-                                                <Form.Item
-                                                    name="suitableAgeMin"
-                                                    label="最小年龄"
-                                                    rules={[{ required: true, message: '请输入最小年龄' }]}
-                                                >
-                                                    <InputNumber min={3} max={99} style={{ width: '100%' }} placeholder="岁" />
-                                                </Form.Item>
-                                            </Col>
-                                            <Col xs={24} sm={12}>
-                                                <Form.Item
-                                                    name="suitableAgeMax"
-                                                    label="最大年龄"
-                                                    rules={[{ required: true, message: '请输入最大年龄' }]}
-                                                >
-                                                    <InputNumber min={3} max={99} style={{ width: '100%' }} placeholder="岁" />
-                                                </Form.Item>
-                                            </Col>
-
-                                            {/* 课程封面 */}
-                                            <Col span={24}>
-                                                <Form.Item label="课程封面">
-                                                    <Space direction="vertical" size={8}>
-                                                        {coverImage && (
-                                                            <Image
-                                                                src={coverImage}
-                                                                alt="课程封面"
-                                                                width={200}
-                                                                height={120}
-                                                                style={{ objectFit: 'cover', borderRadius: 8 }}
-                                                            />
-                                                        )}
-                                                        <Upload
-                                                            accept="image/*"
-                                                            showUploadList={false}
-                                                            customRequest={({ onSuccess }) => {
-                                                                setTimeout(() => onSuccess?.('ok'), 500);
-                                                            }}
-                                                            onChange={handleCoverUpload}
-                                                        >
-                                                            <Button icon={<UploadOutlined />}>
-                                                                {coverImage ? '更换封面' : '上传封面'}
-                                                            </Button>
-                                                        </Upload>
-                                                    </Space>
                                                 </Form.Item>
                                             </Col>
                                         </Row>
@@ -338,15 +295,6 @@ const CourseEdit: React.FC = () => {
                                                     rules={[{ required: true, message: '请输入单次课时' }]}
                                                 >
                                                     <InputNumber min={30} max={180} style={{ width: '100%' }} placeholder="分钟" />
-                                                </Form.Item>
-                                            </Col>
-                                            <Col xs={24} sm={12}>
-                                                <Form.Item
-                                                    name="classSizeMin"
-                                                    label="最少开班人数"
-                                                    rules={[{ required: true, message: '请输入最少开班人数' }]}
-                                                >
-                                                    <InputNumber min={1} max={100} style={{ width: '100%' }} placeholder="人" />
                                                 </Form.Item>
                                             </Col>
                                             <Col xs={24} sm={12}>
@@ -422,14 +370,6 @@ const CourseEdit: React.FC = () => {
                                             </Col>
                                             <Col span={24}>
                                                 <Form.Item
-                                                    name="requirements"
-                                                    label="报名要求"
-                                                >
-                                                    <TextArea rows={2} placeholder="请输入报名要求，如：需要有一定的足球基础" maxLength={200} showCount />
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={24}>
-                                                <Form.Item
                                                     name="equipment"
                                                     label="所需装备"
                                                 >
@@ -437,22 +377,77 @@ const CourseEdit: React.FC = () => {
                                                 </Form.Item>
                                             </Col>
                                             <Col span={24}>
-                                                <Form.Item
-                                                    name="objectives"
-                                                    label="课程目标"
-                                                    extra="每行一个目标"
-                                                >
-                                                    <TextArea rows={3} placeholder="如：\n掌握基本传球技巧\n提升体能素质" maxLength={500} showCount />
-                                                </Form.Item>
+                                                <div className="objective-section">
+                                                    <div className="objective-label">
+                                                        <span className="label-text">课程目标</span>
+                                                        <span className="label-extra">每行一个目标，可添加多个</span>
+                                                    </div>
+                                                    <Space direction="vertical" size={12} style={{ width: '100%' }}>
+                                                        {objectives.map((objective, index) => (
+                                                            <div key={index} className="objective-item">
+                                                                <Input
+                                                                    placeholder={`如：掌握基本传球技巧`}
+                                                                    value={objective}
+                                                                    onChange={(e) => handleObjectiveChange(index, e.target.value)}
+                                                                    maxLength={100}
+                                                                    style={{ flex: 1 }}
+                                                                />
+                                                                <Button
+                                                                    type="text"
+                                                                    danger
+                                                                    icon={<DeleteOutlined />}
+                                                                    onClick={() => handleRemoveObjective(index)}
+                                                                    disabled={objectives.length <= 1}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                        <Button
+                                                            type="dashed"
+                                                            block
+                                                            icon={<PlusOutlined />}
+                                                            onClick={handleAddObjective}
+                                                        >
+                                                            添加目标
+                                                        </Button>
+                                                    </Space>
+                                                </div>
                                             </Col>
+                                            <Divider />
                                             <Col span={24}>
-                                                <Form.Item
-                                                    name="features"
-                                                    label="课程特色"
-                                                    extra="每行一个特色"
-                                                >
-                                                    <TextArea rows={3} placeholder="如：\n专业教练团队\n小班化教学" maxLength={500} showCount />
-                                                </Form.Item>
+                                                <div className="feature-section">
+                                                    <div className="feature-label">
+                                                        <span className="label-text">课程特色</span>
+                                                        <span className="label-extra">每行一个特色，可添加多个</span>
+                                                    </div>
+                                                    <Space direction="vertical" size={12} style={{ width: '100%' }}>
+                                                        {features.map((feature, index) => (
+                                                            <div key={index} className="feature-item">
+                                                                <Input
+                                                                    placeholder={`如：专业教练团队`}
+                                                                    value={feature}
+                                                                    onChange={(e) => handleFeatureChange(index, e.target.value)}
+                                                                    maxLength={100}
+                                                                    style={{ flex: 1 }}
+                                                                />
+                                                                <Button
+                                                                    type="text"
+                                                                    danger
+                                                                    icon={<DeleteOutlined />}
+                                                                    onClick={() => handleRemoveFeature(index)}
+                                                                    disabled={features.length <= 1}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                        <Button
+                                                            type="dashed"
+                                                            block
+                                                            icon={<PlusOutlined />}
+                                                            onClick={handleAddFeature}
+                                                        >
+                                                            添加特色
+                                                        </Button>
+                                                    </Space>
+                                                </div>
                                             </Col>
                                         </Row>
                                     </div>
@@ -471,32 +466,23 @@ const CourseEdit: React.FC = () => {
                                                     <Row gutter={[16, 8]}>
                                                         <Col xs={24} sm={4}>
                                                             <Input
-                                                                placeholder="阶段"
+                                                                placeholder="阶段名称"
                                                                 value={outline.phase}
                                                                 onChange={(e) => handleOutlineChange(index, 'phase', e.target.value)}
                                                             />
                                                         </Col>
                                                         <Col xs={24} sm={8}>
                                                             <Input
-                                                                placeholder="标题"
+                                                                placeholder="核心主题"
                                                                 value={outline.title}
                                                                 onChange={(e) => handleOutlineChange(index, 'title', e.target.value)}
                                                             />
                                                         </Col>
                                                         <Col xs={24} sm={8}>
                                                             <Input
-                                                                placeholder="内容"
+                                                                placeholder="训练内容"
                                                                 value={outline.content}
                                                                 onChange={(e) => handleOutlineChange(index, 'content', e.target.value)}
-                                                            />
-                                                        </Col>
-                                                        <Col xs={20} sm={2}>
-                                                            <InputNumber
-                                                                min={1}
-                                                                placeholder="课时"
-                                                                value={outline.hours}
-                                                                onChange={(value) => handleOutlineChange(index, 'hours', value)}
-                                                                style={{ width: '100%' }}
                                                             />
                                                         </Col>
                                                         <Col xs={4} sm={2}>
@@ -531,35 +517,59 @@ const CourseEdit: React.FC = () => {
                                     </div>
                                     <div className='section-body'>
                                         <Row gutter={[24, 0]}>
+                                            {/* 课程封面 */}
                                             <Col span={24}>
-                                                <Form.Item
-                                                    name="sortOrder"
-                                                    label="排序"
-                                                    initialValue={0}
-                                                >
-                                                    <InputNumber
-                                                        min={0}
-                                                        max={9999}
-                                                        style={{ width: '100%' }}
-                                                        placeholder="数字越小排序越靠前"
-                                                    />
+                                                <Form.Item label="课程封面">
+                                                    <Space direction="vertical" size={8}>
+                                                        {coverImage && (
+                                                            <Image
+                                                                src={coverImage}
+                                                                alt="课程封面"
+                                                                width={200}
+                                                                height={120}
+                                                                style={{ objectFit: 'cover', borderRadius: 8 }}
+                                                            />
+                                                        )}
+                                                        <Upload
+                                                            accept="image/*"
+                                                            showUploadList={false}
+                                                            customRequest={({ onSuccess }) => {
+                                                                setTimeout(() => onSuccess?.('ok'), 500);
+                                                            }}
+                                                            onChange={handleCoverUpload}
+                                                        >
+                                                            <Button icon={<UploadOutlined />}>
+                                                                {coverImage ? '更换封面' : '上传封面'}
+                                                            </Button>
+                                                        </Upload>
+                                                    </Space>
                                                 </Form.Item>
                                             </Col>
                                             <Col span={24}>
-                                                <Form.Item
-                                                    name="status"
-                                                    label="上架状态"
-                                                    initialValue={1}
-                                                >
-                                                    <Select placeholder="请选择">
-                                                        {STATUS_OPTIONS.map((opt) => (
-                                                            <Option key={opt.value} value={opt.value}>
-                                                                <Tag color={opt.value === 1 ? 'success' : 'default'}>
-                                                                    {opt.label}
-                                                                </Tag>
-                                                            </Option>
-                                                        ))}
-                                                    </Select>
+                                                <Form.Item label="课程图片集">
+                                                    <Space direction="vertical" size={8}>
+                                                        {coverImage && (
+                                                            <Image
+                                                                src={coverImage}
+                                                                alt="图片集"
+                                                                width={200}
+                                                                height={120}
+                                                                style={{ objectFit: 'cover', borderRadius: 8 }}
+                                                            />
+                                                        )}
+                                                        <Upload
+                                                            accept="image/*"
+                                                            showUploadList={false}
+                                                            customRequest={({ onSuccess }) => {
+                                                                setTimeout(() => onSuccess?.('ok'), 500);
+                                                            }}
+                                                            onChange={handleCoverUpload}
+                                                        >
+                                                            <Button icon={<UploadOutlined />}>
+                                                                {coverImage ? '更换封面' : '上传封面'}
+                                                            </Button>
+                                                        </Upload>
+                                                    </Space>
                                                 </Form.Item>
                                             </Col>
                                         </Row>
@@ -574,7 +584,7 @@ const CourseEdit: React.FC = () => {
                                             <div className='info-icon'>💡</div>
                                             <div className='info-title'>填写须知</div>
                                             <div className='info-desc'>
-                                                标有 <span style={{ color: '#ff4d4f' }}>*</span> 的为必填项。课程大纲可以根据实际教学计划添加多个阶段，每个阶段包含标题、内容和课时数。
+                                                标有 <span style={{ color: '#ff4d4f' }}>*</span> 的为必填项。课程大纲可以根据实际教学计划添加多个阶段，每个阶段包含标题、内容。
                                             </div>
                                         </div>
                                     </div>
