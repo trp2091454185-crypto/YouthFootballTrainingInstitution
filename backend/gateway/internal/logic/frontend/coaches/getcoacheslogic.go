@@ -51,26 +51,26 @@ func (l *GetCoachesLogic) GetCoaches() (*ListCoachesResp, error) {
 	var list []ModelCoaches
 
 	for _, item := range ListModel {
-		core := ModelCoaches{
+		model := ModelCoaches{
 			Name:      item.Name,
 			Avatar:    *item.Avatar,
 			Gender:    item.Gender,
 			WorkYears: *item.WorkYears,
 		}
 		if item.Bio != nil {
-			core.Bio = *item.Bio
+			model.Bio = *item.Bio
 		}
 		if item.TeachingFeatures != nil {
-			core.TeachingFeatures = *item.TeachingFeatures
+			model.TeachingFeatures = *item.TeachingFeatures
 		}
 		if item.Specialties != nil {
-			core.Specialties = item.Specialties
+			model.Specialties = item.Specialties
 		}
 		if item.AgeGroups != nil {
-			core.AgeGroups = item.AgeGroups
+			model.AgeGroups = item.AgeGroups
 		}
 
-		list = append(list, core)
+		list = append(list, model)
 	}
 	return &ListCoachesResp{List: list}, nil
 }

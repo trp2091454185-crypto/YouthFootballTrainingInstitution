@@ -47,14 +47,14 @@ func (l *GetCoreStrengthsLogic) GetCoreStrengths() (*ListCoreStrengthsResp, erro
 
 	for _, item := range ListModel {
 		// 每遍历一条，创建一个新的 CoreModel 对象
-		core := CoreModel{
+		model := CoreModel{
 			Icon:  *item.Icon,
 			Title: item.Title,
 		}
 		if item.Description != nil {
-			core.Desc = *item.Description
+			model.Desc = *item.Description
 		}
-		list = append(list, core)
+		list = append(list, model)
 	}
 	return &ListCoreStrengthsResp{List: list}, nil
 }

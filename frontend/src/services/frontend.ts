@@ -1,5 +1,13 @@
 import request from '@/utils/request';
 // 获取核心优势列表
+
+
+export interface CouresListParams {
+    current?: number;
+    pageSize?: number;
+    ids?: string[];
+}
+
 export const getCoreStrengthsList = () => {
     return request('/api/v1/frontend/home/coreStrengths', {
         method: 'GET',
@@ -24,3 +32,15 @@ export const getCoachesList = () => {
     });
 };
 
+export const getCourseCategory = () => {
+    return request('/api/v1/frontend/courses/CourseCategory', {
+        method: 'GET',
+    });
+};
+
+export const getCourseList = (params: CouresListParams) => {
+    return request('/api/v1/frontend/courses/CourseList', {
+        method: 'GET',
+        params
+    });
+};

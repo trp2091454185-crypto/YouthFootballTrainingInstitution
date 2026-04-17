@@ -34,5 +34,6 @@ import (
 	"frontend/home.api"
 	"frontend/about.api"
 	"frontend/coaches.api"
+	"frontend/courses.api"
 )
 

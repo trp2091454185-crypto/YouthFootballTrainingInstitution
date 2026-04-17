@@ -38,6 +38,10 @@ func (l *ListCourseLogic) ListCourse(req *ListCourseReq) (*ListCourseResp, error
 	resp := &ListCourseResp{}
 	db := l.svcCtx.DB.Model(&models.Course{})
 
+	if req.CategoryId != 0 {
+		db = db.Where("category_id = ?", req.CategoryId)
+	}
+
 	if req.Keyword != "" {
 		db = db.Where("name LIKE ?", "%"+req.Keyword+"%")
 	}

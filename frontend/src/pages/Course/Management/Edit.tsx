@@ -15,8 +15,9 @@ import {
     Space,
     Tag,
     Divider,
+    TreeSelect,
 } from 'antd';
-import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined } from '@ant-design/icons';
+import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, FolderOutlined, FileOutlined } from '@ant-design/icons';
 import { createCourse, updateCourse, getCourseDetail } from '@/services/course';
 import type { Course, CourseOutline } from '@/services/course';
 import { getCourseCategoryList } from '@/services/course';
@@ -41,7 +42,7 @@ const CourseEdit: React.FC = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+    const [categories, setCategories] = useState<{ id: string; name: string; children?: { id: string; name: string }[] }[]>([]);
     const [coverImage, setCoverImage] = useState<string>('');
     const [outlines, setOutlines] = useState<CourseOutline[]>([]);
     const [objectives, setObjectives] = useState<string[]>(['']);
@@ -159,13 +160,20 @@ const CourseEdit: React.FC = () => {
 
     // 提交表单
     const handleSubmit = async () => {
+        // 校验课程特色至少填写一项
+        const validFeatures = features.filter(f => f.trim());
+        if (validFeatures.length === 0) {
+            message.warning('请至少填写一项课程特色');
+            return;
+        }
+
         try {
             const values = await form.validateFields();
             setSaving(true);
 
             const submitData: Partial<Course> = {
                 ...values,
-                                outline: outlines.filter(o => o.title.trim()),
+                outline: outlines.filter(o => o.title.trim()),
                 features: features.filter(f => f.trim()),
                 objectives: objectives.filter(o => o.trim()),
             };
@@ -228,6 +236,15 @@ const CourseEdit: React.FC = () => {
                                             {/* 课程编码 + 名称 */}
                                             <Col xs={24} sm={12}>
                                                 <Form.Item
+                                                    name="code"
+                                                    label="课程编码"
+                                                    rules={[{ required: true, message: '请输入课程编码' }]}
+                                                >
+                                                    <Input placeholder="例如：C1001" maxLength={20} />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
                                                     name="name"
                                                     label="课程名称"
                                                     rules={[{ required: true, message: '请输入课程名称' }]}
@@ -243,13 +260,19 @@ const CourseEdit: React.FC = () => {
                                                     label="所属分类"
                                                     rules={[{ required: true, message: '请选择分类' }]}
                                                 >
-                                                    <Select placeholder="请选择分类">
-                                                        {categories.map((cat) => (
-                                                            <Option key={cat.id} value={cat.id}>
-                                                                {cat.name}
-                                                            </Option>
-                                                        ))}
-                                                    </Select>
+                                                    <TreeSelect
+                                                        placeholder="请选择分类"
+                                                        treeData={categories.map(cat => ({
+                                                            value: cat.id,
+                                                            title: <><FolderOutlined /> {cat.name}</>,
+                                                            children: cat.children?.map(child => ({
+                                                                value: child.id,
+                                                                title: <><FileOutlined /> {child.name}</>,
+                                                            })),
+                                                        }))}
+                                                        treeDefaultExpandAll
+                                                        allowClear
+                                                    />
                                                 </Form.Item>
                                             </Col>
                                             <Col xs={24} sm={12}>
@@ -364,8 +387,9 @@ const CourseEdit: React.FC = () => {
                                                 <Form.Item
                                                     name="description"
                                                     label="课程描述"
+                                                    rules={[{ required: true, message: '请填写课程描述' }]}
                                                 >
-                                                    <TextArea rows={4} placeholder="请输入课程的详细描述" maxLength={500} showCount />
+                                                    <TextArea rows={4} placeholder="请填写课程的详细描述" maxLength={500} showCount />
                                                 </Form.Item>
                                             </Col>
                                             <Col span={24}>
@@ -416,7 +440,7 @@ const CourseEdit: React.FC = () => {
                                             <Col span={24}>
                                                 <div className="feature-section">
                                                     <div className="feature-label">
-                                                        <span className="label-text">课程特色</span>
+                                                        <span className="label-text"><span style={{ color: '#ff4d4f', marginRight: 4 }}>*</span>课程特色</span>
                                                         <span className="label-extra">每行一个特色，可添加多个</span>
                                                     </div>
                                                     <Space direction="vertical" size={12} style={{ width: '100%' }}>

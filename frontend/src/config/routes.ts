@@ -4,7 +4,12 @@ export default [
     component: '@/components/Layout/CustomLayout',
     routes: [
       {
-        path: '/',
+        path: '/',            // 匹配根路径
+        redirect: '/frontend',  // 重定向到前台首页
+        hideInMenu: true,
+      },
+      {
+        path: '/dashboard',
         name: '工作台',
         icon: 'form',
         component: './Dashboard',

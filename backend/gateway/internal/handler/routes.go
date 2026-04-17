@@ -16,6 +16,7 @@ import (
 	feedback "server/gateway/internal/handler/feedback"
 	frontendabout "server/gateway/internal/handler/frontend/about"
 	frontendcoaches "server/gateway/internal/handler/frontend/coaches"
+	frontendcourses "server/gateway/internal/handler/frontend/courses"
 	frontendhome "server/gateway/internal/handler/frontend/home"
 	institutionfacility "server/gateway/internal/handler/institution/facility"
 	institutionhonor "server/gateway/internal/handler/institution/honor"
@@ -305,6 +306,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/frontend/coaches"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/CourseCategory",
+				Handler: frontendcourses.GetCourseCategoryHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/CourseList",
+				Handler: frontendcourses.GetCourseListHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/frontend/courses"),
 	)
 
 	server.AddRoutes(

@@ -82,6 +82,11 @@ const Category: React.FC<ClassificationProps> = ({
     }
   }, []);
 
+  // 处理刷新
+  const handleRefresh = () => {
+    onSelect?.('')
+  };
+
   // 处理删除分类
   const handleDeleteCategory = async (id: string) => {
     try {
@@ -170,6 +175,7 @@ const Category: React.FC<ClassificationProps> = ({
     };
 
     const tree = convertToTree(categories);
+
     return tree;
   };
 
@@ -295,9 +301,9 @@ const Category: React.FC<ClassificationProps> = ({
               type="link"
               size="small"
               icon={<ReloadOutlined />}
-              onClick={fetchCategoryTree}
+              onClick={handleRefresh}
             >
-              刷新
+              重置
             </Button>
           </Space>
         }

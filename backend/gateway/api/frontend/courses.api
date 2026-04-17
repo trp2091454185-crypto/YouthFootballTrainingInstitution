@@ -1,0 +1,17 @@
+syntax = "v1"
+
+
+@server(
+    group: frontend/courses
+    prefix: /api/v1/frontend/courses
+)
+service gateway {
+    //获取课程分类信息
+    @handler GetCourseCategory
+    get /CourseCategory
+
+    //获取课程信息
+    @handler GetCourseList
+    get /CourseList
+
+}

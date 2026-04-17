@@ -24,9 +24,12 @@ import type { Course, CourseListParams } from '@/services/course';
 import {
   getCourseList,
   deleteCourse,
+  updateCourse,
 } from '@/services/course';
 import Category from './Category';
 import './index.less';
+import getStatusColumn from '@/components/StatusColumn';
+import getTimeColumns from '@/components/TimeColumn';
 
 // 年龄段选项
 const AGE_GROUP_OPTIONS = [
@@ -173,27 +176,31 @@ const CourseManagement: React.FC = () => {
       ),
     },
     {
+      title: '课程编号',
+      dataIndex: 'code',
+      width: 80,
+    },
+    {
       title: '课程名称',
       dataIndex: 'name',
-      width: 180,
+      width: 140,
       render: (_, record) => (
         <Space direction="vertical" size={0}>
           <span style={{ fontWeight: 500 }}>{record.name}</span>
-          <span style={{ fontSize: 12, color: '#999' }}>{record.code || '-'}</span>
         </Space>
       ),
     },
+    getStatusColumn<any>({
+      updateApi: updateCourse,
+      actionRef,
+    }),
     {
       title: '年龄段',
       dataIndex: 'ageGroupTag',
       width: 100,
-      valueType: 'select',
-      fieldProps: {
-        options: AGE_GROUP_OPTIONS,
-      },
-      render: (_, record) => (
+      render: (value, _) => (
         <Tag color="blue">
-          {record.suitableAgeMin}-{record.suitableAgeMax}岁
+          {value}
         </Tag>
       ),
     },
@@ -212,10 +219,11 @@ const CourseManagement: React.FC = () => {
     },
     {
       title: '班级规模',
+      dataIndex: 'classSizeMax',
       width: 100,
       search: false,
-      render: (_, record) => (
-        <span>{record.classSizeMin}-{record.classSizeMax}人</span>
+      render: (value, _) => (
+        <span>{value}人</span>
       ),
     },
     {
@@ -235,50 +243,32 @@ const CourseManagement: React.FC = () => {
       ),
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      width: 100,
-      valueType: 'select',
-      fieldProps: {
-        options: STATUS_OPTIONS,
-      },
-      render: (status) => (
-        <Tag color={status === 1 ? 'success' : 'default'}>
-          {status === 1 ? '已上架' : '已下架'}
-        </Tag>
-      ),
-    },
-    {
       title: '课程特色',
       dataIndex: 'features',
       width: 180,
       search: false,
       ellipsis: true,
       render: (features) => {
-        if (!features || !Array.isArray(features) || features.length === 0) {
+        const text = features?.props?.children
+
+        if (!text || !Array.isArray(text) || text.length === 0) {
           return '-';
         }
         return (
           <Space size={[0, 4]} wrap>
-            {(features as string[]).slice(0, 2).map((feature, index) => (
+            {(text as string[]).slice(0, 2).map((feature, index) => (
               <Tag key={index} color="cyan" style={{ fontSize: 11 }}>
                 {feature}
               </Tag>
             ))}
-            {(features as string[]).length > 2 && (
-              <Tag style={{ fontSize: 11 }}>+{(features as string[]).length - 2}</Tag>
+            {(text as string[]).length > 2 && (
+              <Tag style={{ fontSize: 11 }}>+{(text as string[]).length - 2}</Tag>
             )}
           </Space>
         );
       },
     },
-    {
-      title: '创建时间',
-      dataIndex: 'createdAt',
-      width: 150,
-      valueType: 'dateTime',
-      search: false,
-    },
+    ...getTimeColumns<any>(),
     {
       title: '操作',
       key: 'action',

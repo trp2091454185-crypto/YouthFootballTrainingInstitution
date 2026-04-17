@@ -77,7 +77,8 @@ const FrontendLayout: React.FC = () => {
                     className="header-menu"
                 />
                 <div className="header-right">
-                    <Avatar size={32} icon={<HomeOutlined />} className="header-avatar" />
+                    <Avatar size={32} icon={<HomeOutlined />} className="header-avatar" 
+                    onClick={() => navigate('/dashboard')}/>
                 </div>
             </Header>
             <Content className="frontend-content">
