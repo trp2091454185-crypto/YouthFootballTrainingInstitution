@@ -3,7 +3,10 @@
 
 package config
 
-import "github.com/zeromicro/go-zero/rest"
+import (
+	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/zrpc"
+)
 
 // 定义MySQL配置结构体，与yaml中的Mysql节点对应
 type MysqlConf struct {
@@ -16,6 +19,7 @@ type MysqlConf struct {
 
 // 主配置结构体，嵌入Go-Zero的rest.RestConf（HTTP服务配置）+ 自定义MysqlConf
 type Config struct {
-	rest.RestConf           // 继承Server相关配置
-	Mysql         MysqlConf `json:"mysql"` // 映射yaml中的Mysql节点
+	rest.RestConf                    // 继承Server相关配置
+	Mysql         MysqlConf          `json:"mysql"`     // 映射yaml中的Mysql节点
+	UploadRpc     zrpc.RpcClientConf `json:"UploadRpc"` // 上传服务
 }

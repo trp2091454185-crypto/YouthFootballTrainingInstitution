@@ -8,16 +8,19 @@ import (
 	"log"
 	"os"
 	"server/gateway/internal/config"
+	"server/rpc/upload/uploadClient"
 	"time"
 
+	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 type ServiceContext struct {
-	Config config.Config
-	DB     *gorm.DB // GORM的MySQL客户端实例
+	Config       config.Config
+	DB           *gorm.DB            // GORM的MySQL客户端实例
+	UploadClient uploadClient.Upload //上传服务 RPC 客户端
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -53,7 +56,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	sqlDB.SetConnMaxLifetime(time.Duration(c.Mysql.MaxLifetime) * time.Second)
 	sqlDB.SetConnMaxIdleTime(time.Duration(c.Mysql.MaxIdleTime) * time.Second)
 	return &ServiceContext{
-		Config: c,
-		DB:     db,
+		Config:       c,
+		DB:           db,
+		UploadClient: uploadClient.NewUpload(zrpc.MustNewClient(c.UploadRpc)),
 	}
 }

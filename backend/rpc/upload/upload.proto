@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package upload;
+option go_package = "./pb";
+
+// 上传服务
+service Upload {
+  rpc UploadFile (UploadReq) returns (UploadResp);
+}
+
+// 上传请求
+message UploadReq {
+  string module = 1;    // 模块：coach / course / honor 等
+  string name = 2;     // 文件名
+  bytes content = 3;   // 文件二进制内容
+}
+
+// 上传响应
+message UploadResp {
+  string url = 1;    // 最终可访问的图片 URL
+  string path = 2;   // 存储路径
+}
