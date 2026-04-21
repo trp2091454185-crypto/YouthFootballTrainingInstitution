@@ -1,5 +1,10 @@
 export default [
   {
+    path: '/login',
+    component: './Login',
+    layout: false,
+  },
+  {
     path: '/',
     component: '@/components/Layout/CustomLayout',
     routes: [

@@ -224,7 +224,7 @@ const Registration: React.FC = () => {
                                             </div>
                                             <div className="contact-detail">
                                                 <Text strong>训练基地地址</Text>
-                                                <p>XX市体育中心绿茵青训基地<br />A馆主训练场</p>
+                                                <p>体育中心绿茵青训基地<br />A馆主训练场</p>
                                             </div>
                                         </div>
 
@@ -244,7 +244,7 @@ const Registration: React.FC = () => {
                                             </div>
                                             <div className="contact-detail">
                                                 <Text strong>营业时间</Text>
-                                                <p>周一至周五 14:00-21:00<br />周六日 08:00-18:00</p>
+                                                <p>周一至周五 14:00-21:00<br />周末 08:00-18:00</p>
                                             </div>
                                         </div>
                                     </div>

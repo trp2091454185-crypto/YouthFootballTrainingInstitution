@@ -86,7 +86,6 @@ const Feedback: React.FC = () => {
                                     form={form}
                                     layout="vertical"
                                     onFinish={onFinish}
-                                    requiredMark="optional"
                                     className="feedback-form"
                                 >
                                     <Row gutter={16}>
@@ -153,7 +152,7 @@ const Feedback: React.FC = () => {
                         </Col>
 
                         {/* 右侧：留言墙 */}
-                        <Col xs={24} lg={11}>
+                        {/* <Col xs={24} lg={11}>
                             <div className="message-wall">
                                 <Card className="wall-card" bordered={false}>
                                     <div className="wall-header">
@@ -196,7 +195,7 @@ const Feedback: React.FC = () => {
                                     />
                                 </Card>
                             </div>
-                        </Col>
+                        </Col> */}
                     </Row>
                 </div>
             </section>

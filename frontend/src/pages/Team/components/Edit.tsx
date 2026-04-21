@@ -103,7 +103,7 @@ const TeamEdit: React.FC = () => {
             breadcrumb={{
                 items: [
                     { title: '教练管理' },
-                    { title: '教练列表', href: '/team/management' },
+                    { title: '教练列表', href: '/team' },
                     { title: isEdit ? '编辑教练信息' : '新增教练信息' },
                 ],
             }}
