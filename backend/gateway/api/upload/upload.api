@@ -1,0 +1,12 @@
+syntax = "v1"
+
+
+@server(
+    group: upload
+    prefix: /api/v1/upload
+)
+service gateway {
+    //上传图片
+    @handler UploadImages
+    post /uploadImages
+}

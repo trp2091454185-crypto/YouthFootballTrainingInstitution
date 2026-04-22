@@ -32,6 +32,7 @@ import (
 	sysconfig "server/gateway/internal/handler/sys/config"
 	sysoperationLog "server/gateway/internal/handler/sys/operationLog"
 	sysuser "server/gateway/internal/handler/sys/user"
+	upload "server/gateway/internal/handler/upload"
 	"server/gateway/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -772,5 +773,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/sys/user"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/uploadImages",
+				Handler: upload.UploadImagesHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/upload"),
 	)
 }

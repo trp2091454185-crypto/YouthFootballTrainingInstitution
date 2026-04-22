@@ -25,6 +25,7 @@ import './index.less';
 import { PageContainer } from '@ant-design/pro-components';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { AGE_GROUP_OPTIONS } from '@/utils/constant';
+import ImageUpload from '@/components/ImageUpload';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -44,6 +45,7 @@ const CourseEdit: React.FC = () => {
     const [saving, setSaving] = useState(false);
     const [categories, setCategories] = useState<{ id: string; name: string; children?: { id: string; name: string }[] }[]>([]);
     const [coverImage, setCoverImage] = useState<string>('');
+    const [Images, setImages] = useState<any>()
     const [outlines, setOutlines] = useState<CourseOutline[]>([]);
     const [objectives, setObjectives] = useState<string[]>(['']);
     const [features, setFeatures] = useState<string[]>(['']);
@@ -84,6 +86,7 @@ const CourseEdit: React.FC = () => {
                 form.setFieldsValue({
                     ...course,
                 });
+                setImages(course.images || '')
                 setCoverImage(course.coverImage || '');
                 setOutlines(course.outline || []);
                 setObjectives(course.objectives && course.objectives.length > 0 ? course.objectives : ['']);
@@ -173,6 +176,8 @@ const CourseEdit: React.FC = () => {
 
             const submitData: Partial<Course> = {
                 ...values,
+                coverImage: coverImage,
+                images: Images,
                 outline: outlines.filter(o => o.title.trim()),
                 features: features.filter(f => f.trim()),
                 objectives: objectives.filter(o => o.trim()),
@@ -199,15 +204,14 @@ const CourseEdit: React.FC = () => {
             setSaving(false);
         }
     };
+    // 封面上传变化处理
+    const handleImageChange = (value: string | string[]) => {
+        setCoverImage(value as string);
+    };
 
-    // 上传封面图片（模拟）
-    const handleCoverUpload = (info: any) => {
-        // 这里应该调用实际上传接口
-        // 暂时模拟上传成功
-        if (info.file.status === 'done') {
-            setCoverImage(URL.createObjectURL(info.file.originFileObj));
-            message.success('上传成功');
-        }
+    // 课程图片上传变化处理
+    const handleImagesChange = (value: string | string[]) => {
+        setImages(value as string);
     };
 
     return (
@@ -544,58 +548,25 @@ const CourseEdit: React.FC = () => {
                                             {/* 课程封面 */}
                                             <Col span={24}>
                                                 <Form.Item label="课程封面">
-                                                    <Space direction="vertical" size={8}>
-                                                        {coverImage && (
-                                                            <Image
-                                                                src={coverImage}
-                                                                alt="课程封面"
-                                                                width={200}
-                                                                height={120}
-                                                                style={{ objectFit: 'cover', borderRadius: 8 }}
-                                                            />
-                                                        )}
-                                                        <Upload
-                                                            accept="image/*"
-                                                            showUploadList={false}
-                                                            customRequest={({ onSuccess }) => {
-                                                                setTimeout(() => onSuccess?.('ok'), 500);
-                                                            }}
-                                                            onChange={handleCoverUpload}
-                                                        >
-                                                            <Button icon={<UploadOutlined />}>
-                                                                {coverImage ? '更换封面' : '上传封面'}
-                                                            </Button>
-                                                        </Upload>
-                                                    </Space>
+                                                    <ImageUpload
+                                                        value={coverImage}
+                                                        onChange={handleImageChange}
+                                                        text="上传图片"
+                                                        module='course'
+                                                    />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={24}>
+                                            {/* <Col span={24}>
                                                 <Form.Item label="课程图片集">
-                                                    <Space direction="vertical" size={8}>
-                                                        {coverImage && (
-                                                            <Image
-                                                                src={coverImage}
-                                                                alt="图片集"
-                                                                width={200}
-                                                                height={120}
-                                                                style={{ objectFit: 'cover', borderRadius: 8 }}
-                                                            />
-                                                        )}
-                                                        <Upload
-                                                            accept="image/*"
-                                                            showUploadList={false}
-                                                            customRequest={({ onSuccess }) => {
-                                                                setTimeout(() => onSuccess?.('ok'), 500);
-                                                            }}
-                                                            onChange={handleCoverUpload}
-                                                        >
-                                                            <Button icon={<UploadOutlined />}>
-                                                                {coverImage ? '更换封面' : '上传封面'}
-                                                            </Button>
-                                                        </Upload>
-                                                    </Space>
+                                                    <ImageUpload
+                                                        value={Images}
+                                                        onChange={handleImagesChange}
+                                                        text="上传图片"
+                                                        module='course'
+                                                        multiple
+                                                    />
                                                 </Form.Item>
-                                            </Col>
+                                            </Col> */}
                                         </Row>
                                     </div>
                                 </div>
@@ -634,7 +605,7 @@ const CourseEdit: React.FC = () => {
                     </Form>
                 </Spin>
             </div>
-        </PageContainer>
+        </PageContainer >
     );
 };
 

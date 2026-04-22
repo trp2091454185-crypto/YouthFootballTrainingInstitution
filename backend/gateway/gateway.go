@@ -6,6 +6,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
 
 	"server/common/tools/snowx"
 	"server/gateway/internal/config"
@@ -32,6 +33,15 @@ func main() {
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
+
+	// 注册静态文件服务：/uploads/* -> ./static/images/*
+	if c.StaticFile.SavePath != "" && c.StaticFile.UrlPrefix != "" {
+		server.AddRoute(rest.Route{
+			Method:  http.MethodGet,
+			Path:    c.StaticFile.UrlPrefix + "/:module/:file",
+			Handler: http.StripPrefix(c.StaticFile.UrlPrefix, http.FileServer(http.Dir(c.StaticFile.SavePath))).ServeHTTP,
+		})
+	}
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()

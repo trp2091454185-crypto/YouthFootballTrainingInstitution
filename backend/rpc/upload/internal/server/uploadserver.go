@@ -6,10 +6,10 @@ package server
 
 import (
 	"context"
-	"server/rpc/upload/pb"
 
 	"server/rpc/upload/internal/logic"
 	"server/rpc/upload/internal/svc"
+	"server/rpc/upload/pb"
 )
 
 type UploadServer struct {

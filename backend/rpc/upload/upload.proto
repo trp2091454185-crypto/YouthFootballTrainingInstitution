@@ -11,8 +11,7 @@ service Upload {
 // 上传请求
 message UploadReq {
   string module = 1;    // 模块：coach / course / honor 等
-  string name = 2;     // 文件名
-  bytes content = 3;   // 文件二进制内容
+  bytes content = 2;   // 文件二进制内容
 }
 
 // 上传响应

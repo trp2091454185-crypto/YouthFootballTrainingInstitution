@@ -18,6 +18,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
 import './Edit.less';
 import { AGE_GROUP_OPTIONS, GENDER, SPECIALTY_OPTIONS } from '@/utils/constant';
+import ImageUpload from '@/components/ImageUpload';
 
 const { Option } = Select;
 
@@ -27,6 +28,7 @@ const TeamEdit: React.FC = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string>('');
 
     const isEdit = !!id;
 
@@ -51,6 +53,10 @@ const TeamEdit: React.FC = () => {
                     ...res.data,
                     birthDate: res.data.birthDate ? dayjs(res.data.birthDate) : undefined,
                 });
+                // 设置头像
+                if (res.data.avatar) {
+                    setImageUrl(res.data.avatar);
+                }
             } else {
                 message.error(res.errorMessage || '获取教练信息失败');
             }
@@ -74,6 +80,7 @@ const TeamEdit: React.FC = () => {
 
             const submitData: Coach = {
                 ...values,
+                avatar: imageUrl,
             };
 
             let res;
@@ -96,6 +103,11 @@ const TeamEdit: React.FC = () => {
         } finally {
             setSaving(false);
         }
+    };
+
+    // 头像上传变化处理
+    const handleAvatarChange = (value: string | string[]) => {
+        setImageUrl(value as string);
     };
 
     return (
@@ -275,18 +287,17 @@ const TeamEdit: React.FC = () => {
                             <Col xs={24} lg={8}>
                                 <div className='section-card'>
                                     <div className='section-header'>
-                                        <span className='section-title'>其他设置</span>
+                                        <span className='section-title'>头像上传</span>
                                     </div>
                                     <div className='section-body'>
                                         <Row gutter={[24, 0]}>
                                             <Col span={24}>
-                                                <Form.Item
-                                                    name="avatar"
-                                                    label="头像链接"
-                                                    rules={[{ required: true, message: '请上传头像' }]}
-                                                >
-                                                    <Input placeholder="请输入头像图片URL" maxLength={500} />
-                                                </Form.Item>
+                                                <ImageUpload
+                                                    value={imageUrl}
+                                                    onChange={handleAvatarChange}
+                                                    text="上传头像"
+                                                    module='coach'
+                                                />
                                             </Col>
                                         </Row>
                                     </div>

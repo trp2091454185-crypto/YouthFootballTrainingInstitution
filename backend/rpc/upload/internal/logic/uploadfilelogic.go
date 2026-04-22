@@ -3,6 +3,8 @@ package logic
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"image"
 	_ "image/jpeg"
@@ -12,8 +14,6 @@ import (
 	"path/filepath"
 	"server/rpc/upload/internal/svc"
 	"server/rpc/upload/pb"
-	"strings"
-	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/codes"
@@ -36,7 +36,6 @@ func NewUploadFileLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upload
 
 const (
 	MaxFileSize = 10 * 1024 * 1024 // 10MB
-	AllowedExt  = ".jpg,.jpeg,.png,.webp"
 )
 
 var allowedImageTypes = map[string]bool{
@@ -49,35 +48,37 @@ func (l *UploadFileLogic) UploadFile(req *pb.UploadReq) (*pb.UploadResp, error) 
 	if len(req.Content) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "文件不能为空")
 	}
-	if req.Name == "" {
-		return nil, status.Error(codes.InvalidArgument, "文件名不能为空")
-	}
-
 	// 2. 大小限制
 	if int64(len(req.Content)) > MaxFileSize {
 		return nil, status.Error(codes.InvalidArgument, "文件最大10MB")
 	}
-
-	// 3. 后缀名校验
-	ext := strings.ToLower(filepath.Ext(req.Name))
-	if !strings.Contains(AllowedExt, ext) {
-		return nil, status.Error(codes.InvalidArgument, "仅支持jpg/png/webp")
-	}
-
-	// 4. 真实文件类型校验
+	// 3. 真实文件类型检测（自动识别图片格式）
 	contentType := http.DetectContentType(req.Content)
 	if !allowedImageTypes[contentType] {
-		return nil, status.Error(codes.InvalidArgument, "非法图片格式")
+		return nil, status.Error(codes.InvalidArgument, "仅支持 jpg、png、webp 格式")
 	}
-
+	// 4. 自动获取后缀（不需要传文件名！自动识别）
+	var ext string
+	switch contentType {
+	case "image/jpeg":
+		ext = ".jpg"
+	case "image/png":
+		ext = ".png"
+	case "image/webp":
+		ext = ".webp"
+	default:
+		return nil, status.Error(codes.InvalidArgument, "不支持的图片格式")
+	}
 	// 5. 图片完整性校验
 	_, _, err := image.DecodeConfig(bytes.NewReader(req.Content))
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "图片已损坏")
 	}
 
-	// 6. 生成唯一文件名（内置时间戳，无任何第三方包）
-	fileName := fmt.Sprintf("%d%s", time.Now().UnixMilli(), ext)
+	// 6. 生成【真正安全随机】的文件名（16位随机字符串）
+	randBytes := make([]byte, 8)
+	_, _ = rand.Read(randBytes)
+	fileName := hex.EncodeToString(randBytes) + ext
 
 	// 7. 保存
 	module := req.Module

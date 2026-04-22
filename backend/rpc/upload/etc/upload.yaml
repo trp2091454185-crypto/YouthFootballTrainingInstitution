@@ -9,6 +9,6 @@ Mode: dev
 
 # 存储配置
 Upload:
-  SavePath: "d:/CodeSample/uploads/images"              # 本地存储根目录
-  BaseUrl: "http://127.0.0.1:8888"   # 访问的基础URL
+  SavePath: "../../static/images"              # 本地存储根目录
+  BaseUrl: "http://127.0.0.1:4000"   # 访问的基础URL
 

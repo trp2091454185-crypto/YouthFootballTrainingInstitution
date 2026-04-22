@@ -7,12 +7,11 @@
 package pb
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -26,8 +25,7 @@ const (
 type UploadReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Module        string                 `protobuf:"bytes,1,opt,name=module,proto3" json:"module,omitempty"`   // 模块：coach / course / honor 等
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`       // 文件名
-	Content       []byte                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"` // 文件二进制内容
+	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"` // 文件二进制内容
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -65,13 +63,6 @@ func (*UploadReq) Descriptor() ([]byte, []int) {
 func (x *UploadReq) GetModule() string {
 	if x != nil {
 		return x.Module
-	}
-	return ""
-}
-
-func (x *UploadReq) GetName() string {
-	if x != nil {
-		return x.Name
 	}
 	return ""
 }
@@ -140,11 +131,10 @@ var File_upload_proto protoreflect.FileDescriptor
 
 const file_upload_proto_rawDesc = "" +
 	"\n" +
-	"\fupload.proto\x12\x06upload\"Q\n" +
+	"\fupload.proto\x12\x06upload\"=\n" +
 	"\tUploadReq\x12\x16\n" +
-	"\x06module\x18\x01 \x01(\tR\x06module\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\fR\acontent\"2\n" +
+	"\x06module\x18\x01 \x01(\tR\x06module\x12\x18\n" +
+	"\acontent\x18\x02 \x01(\fR\acontent\"2\n" +
 	"\n" +
 	"UploadResp\x12\x10\n" +
 	"\x03url\x18\x01 \x01(\tR\x03url\x12\x12\n" +

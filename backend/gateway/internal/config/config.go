@@ -22,4 +22,10 @@ type Config struct {
 	rest.RestConf                    // 继承Server相关配置
 	Mysql         MysqlConf          `json:"mysql"`     // 映射yaml中的Mysql节点
 	UploadRpc     zrpc.RpcClientConf `json:"UploadRpc"` // 上传服务
+	StaticFile    StaticFileConf     `json:"StaticFile"`// 静态文件服务
+}
+
+type StaticFileConf struct {
+	SavePath  string `json:"savePath"`
+	UrlPrefix string `json:"urlPrefix"`
 }

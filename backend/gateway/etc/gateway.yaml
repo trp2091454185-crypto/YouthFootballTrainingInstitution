@@ -1,6 +1,7 @@
 Name: gateway
 Host: 0.0.0.0
 Port: 4000
+MaxBytes: 10485760   # 允许 10MB 上传
 
 
 # 新增MySQL数据库配置（GORM用）
@@ -16,3 +17,8 @@ UploadRpc:
   Endpoints:
     - 127.0.0.1:8888          # Upload RPC 服务地址（开发环境直连）
   NonBlock: true
+
+# 静态文件服务
+StaticFile:
+  SavePath: "../static/images"              # 与 RPC 服务保持一致的存储根目录
+  UrlPrefix: "/uploads"                    # URL 访问前缀
