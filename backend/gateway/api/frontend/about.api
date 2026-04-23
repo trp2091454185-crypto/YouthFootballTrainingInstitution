@@ -9,4 +9,8 @@ service gateway {
     //获取荣誉奖项展示信息
     @handler GetHonor
     get /honor
+
+    //获取场地设施展示信息
+    @handler GetFacility
+    get /facility
 }

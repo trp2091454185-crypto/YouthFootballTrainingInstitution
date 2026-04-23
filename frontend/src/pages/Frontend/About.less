@@ -143,7 +143,7 @@
 
         .honor-image-wrapper {
             position: relative;
-            height: 220px;
+            height: 150px;
             overflow: hidden;
 
             .honor-image {
@@ -207,23 +207,68 @@
     .venue-card {
         border-radius: 14px !important;
         border: 1px solid rgba(0, 0, 0, 0.06) !important;
-        text-align: center;
+        overflow: hidden;
         transition: all 0.3s ease;
+        height: 100%;
 
         &:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(25, 118, 210, 0.12);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(46, 125, 50, 0.15);
         }
 
-        .venue-image {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
+        .venue-image-wrapper {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+
+            .venue-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.4s ease;
+            }
+
+            &:hover .venue-image {
+                transform: scale(1.05);
+            }
+
+            .venue-image-fallback {
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                color: #2E7D32;
+                font-size: 15px;
+
+                span::before {
+                    font-size: 36px;
+                    margin-bottom: 6px;
+                }
+            }
+        }
+
+        .venue-content {
+            padding: 20px;
+
+            .venue-title {
+                color: #1B5E20 !important;
+                margin-bottom: 10px !important;
+                font-size: 18px !important;
+                font-weight: 600 !important;
+                text-align: center;
+            }
+
+            .venue-desc {
+                color: #616161;
+                font-size: 14px;
+                line-height: 1.7;
+                text-align: center;
+                margin-bottom: 0 !important;
+            }
         }
     }
 }

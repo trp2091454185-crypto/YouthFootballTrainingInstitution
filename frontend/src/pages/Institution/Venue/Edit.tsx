@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Form, Input, InputNumber, Select, message } from 'antd';
 import type { InstitutionFacility } from '@/services/institution';
 import { createFacility, updateFacility } from '@/services/institution';
+import ImageUpload from '@/components/ImageUpload';
 
 export interface VenueEditModalProps {
     /** 模态框可见性 */
@@ -23,6 +24,7 @@ const VenueEditModal: React.FC<VenueEditModalProps> = ({
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
     const isEdit = !!record?.id;
+    const [Image, setImage] = useState<string>('');
 
     // 打开时回填数据
     React.useEffect(() => {
@@ -31,8 +33,8 @@ const VenueEditModal: React.FC<VenueEditModalProps> = ({
                 form.setFieldsValue({
                     name: record.name,
                     description: record.description,
-                    images: record.images || '',
                 });
+                setImage(record.coverImage || '')
             } else {
                 form.resetFields();
             }
@@ -43,7 +45,14 @@ const VenueEditModal: React.FC<VenueEditModalProps> = ({
     const handleClose = () => {
         form.resetFields();
         onClose();
+        setImage("")
     };
+
+    // 图片上传变化处理
+    const handleImageChange = (value: string | string[]) => {
+        setImage(value as string);
+    };
+
 
     // 提交
     const handleSubmit = async () => {
@@ -54,8 +63,13 @@ const VenueEditModal: React.FC<VenueEditModalProps> = ({
             // 处理数组字段转换
             const submitData: InstitutionFacility = {
                 ...values,
+                coverImage: Image
             };
 
+            if (Image == '') {
+                message.warning('请上传图片');
+                return;
+            }
             let res;
             if (isEdit && record?.id) {
                 res = await updateFacility(record.id, submitData);
@@ -67,6 +81,7 @@ const VenueEditModal: React.FC<VenueEditModalProps> = ({
                 message.success(isEdit ? '更新成功' : '创建成功');
                 handleClose();
                 onSuccess();
+                setImage("")
             } else {
                 message.error(res.errorMessage || (isEdit ? '更新失败' : '创建失败'));
             }
@@ -105,6 +120,7 @@ const VenueEditModal: React.FC<VenueEditModalProps> = ({
                 <Form.Item
                     name="description"
                     label="场地描述"
+                    rules={[{ required: true, message: '请填写描述' }]}
                 >
                     <Input.TextArea
                         placeholder="请输入场地描述，如场地面积、配套设施等详细信息"
@@ -113,19 +129,15 @@ const VenueEditModal: React.FC<VenueEditModalProps> = ({
                         showCount
                     />
                 </Form.Item>
-                <Form.Item
-                    name="images"
-                    label="场地图片"
-                    extra="每行输入一个图片URL地址，支持多个图片"
-                >
-                    <Input.TextArea
-                        placeholder="请输入图片URL，每行一个地址"
-                        rows={3}
-                        maxLength={1000}
-                        showCount
+                <Form.Item label="场地图片">
+                    <ImageUpload
+                        value={Image}
+                        onChange={handleImageChange}
+                        text="上传图片"
+                        module='carousel'
+                        aspect={16 / 9}
                     />
                 </Form.Item>
-
             </Form>
         </Modal>
     );

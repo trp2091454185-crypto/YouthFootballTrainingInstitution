@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, InputNumber, Select, DatePicker, message } from 'antd';
+import { Modal, Form, Input, DatePicker, message } from 'antd';
 import type { InstitutionHonor } from '@/services/institution';
 import { createHonor, updateHonor } from '@/services/institution';
 import dayjs from 'dayjs';
 import locale from 'antd/es/date-picker/locale/zh_CN';
+import ImageUpload from '@/components/ImageUpload';
 
 export interface HonorEditModalProps {
     /** 模态框可见性 */
@@ -25,6 +26,12 @@ const HonorEditModal: React.FC<HonorEditModalProps> = ({
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
     const isEdit = !!record?.id;
+    const [image, setImage] = useState<string>('');
+
+    // 图片上传变化处理
+    const handleImageChange = (value: string | string[]) => {
+        setImage(value as string);
+    };
 
     // 打开时回填数据
     React.useEffect(() => {
@@ -35,8 +42,8 @@ const HonorEditModal: React.FC<HonorEditModalProps> = ({
                     awardOrg: record.awardOrg,
                     awardDate: dayjs(record.awardDate),
                     description: record.description,
-                    image: record.image
                 });
+                setImage(record?.image || '')
             } else {
                 form.resetFields();
             }
@@ -47,6 +54,7 @@ const HonorEditModal: React.FC<HonorEditModalProps> = ({
     const handleClose = () => {
         form.resetFields();
         onClose();
+        setImage("")
     };
 
     // 提交
@@ -55,17 +63,27 @@ const HonorEditModal: React.FC<HonorEditModalProps> = ({
             const values = await form.validateFields();
             setSubmitting(true);
 
+            const submitData = {
+                ...values,
+                image: image,
+            };
+            if (image == '') {
+                message.warning('请上传图片');
+                return;
+            }
+
             let res;
             if (isEdit && record?.id) {
-                res = await updateHonor(record.id, values as InstitutionHonor);
+                res = await updateHonor(record.id, submitData as InstitutionHonor);
             } else {
-                res = await createHonor(values as InstitutionHonor);
+                res = await createHonor(submitData as InstitutionHonor);
             }
 
             if (res.success) {
                 message.success(isEdit ? '更新成功' : '创建成功');
                 handleClose();
                 onSuccess();
+                setImage("")
             } else {
                 message.error(res.errorMessage || (isEdit ? '更新失败' : '创建失败'));
             }
@@ -122,11 +140,14 @@ const HonorEditModal: React.FC<HonorEditModalProps> = ({
                     />
                 </Form.Item>
 
-                <Form.Item
-                    name="image"
-                    label="图片"
-                >
-                    <Input placeholder="请输入" maxLength={100} showCount />
+                <Form.Item label="图片">
+                    <ImageUpload
+                        value={image}
+                        onChange={handleImageChange}
+                        text="上传图片"
+                        module='honor'
+                        aspect={16 / 9}
+                    />
                 </Form.Item>
 
                 <Form.Item

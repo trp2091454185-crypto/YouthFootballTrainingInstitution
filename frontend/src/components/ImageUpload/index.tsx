@@ -45,7 +45,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     module = 'file',
     text = '上传图片',
     maxSize = 10,
-    accept = 'image/jpeg,image/png,image/webp',
+    accept = 'image/jpeg,image/png',
     className,
     disabled = false,
     aspect,

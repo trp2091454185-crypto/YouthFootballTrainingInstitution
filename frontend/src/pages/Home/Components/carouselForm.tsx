@@ -3,6 +3,7 @@ import { Modal, Form, Input, InputNumber, Select, Switch, DatePicker, message } 
 import type { Dayjs } from 'dayjs';
 import type { Banner } from '@/services/home';
 import { createBanner, updateBanner } from '@/services/home';
+import ImageUpload from '@/components/ImageUpload';
 
 export interface CarouselFormProps {
     /** 模态框可见性 */
@@ -24,6 +25,13 @@ const CarouselForm: React.FC<CarouselFormProps> = ({
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
     const isEdit = !!record?.id;
+    const [Image, setImage] = useState<string>('');
+
+    // 封面上传变化处理
+    const handleImageChange = (value: string | string[]) => {
+        setImage(value as string);
+    };
+
 
     // 打开时回填数据
     React.useEffect(() => {
@@ -32,12 +40,12 @@ const CarouselForm: React.FC<CarouselFormProps> = ({
                 form.setFieldsValue({
                     title: record.title,
                     subtitle: record.subtitle,
-                    image: record.image,
                     linkType: record.linkType ?? 1,
                     linkUrl: record.linkUrl,
                     linkPage: record.linkPage,
                     target: record.target || '_self',
                 });
+                setImage(record?.image || '')
             } else {
                 form.resetFields();
                 form.setFieldsValue({
@@ -52,6 +60,7 @@ const CarouselForm: React.FC<CarouselFormProps> = ({
     const handleClose = () => {
         form.resetFields();
         onClose();
+        setImage("")
     };
 
     // 提交
@@ -60,17 +69,26 @@ const CarouselForm: React.FC<CarouselFormProps> = ({
             const values = await form.validateFields();
             setSubmitting(true);
 
+            const submitData = {
+                ...values,
+                image: Image,
+            };
             let res;
+            if (Image == '') {
+                message.warning('请上传图片');
+                return;
+            }
             if (isEdit && record?.id) {
-                res = await updateBanner(record.id, values as Banner);
+                res = await updateBanner(record.id, submitData as Banner);
             } else {
-                res = await createBanner(values as Banner);
+                res = await createBanner(submitData as Banner);
             }
 
             if (res.success) {
                 message.success(isEdit ? '更新成功' : '创建成功');
                 handleClose();
                 onSuccess();
+                setImage("")
             } else {
                 message.error(res.errorMessage || (isEdit ? '更新失败' : '创建失败'));
             }
@@ -171,13 +189,14 @@ const CarouselForm: React.FC<CarouselFormProps> = ({
                         )
                     }
                 </Form.Item>
-
-                <Form.Item
-                    name="image"
-                    label="图片地址"
-                    rules={[{ required: false, message: '请输入图片地址' }]}
-                >
-                    <Input placeholder="请输入图片URL" maxLength={500} />
+                <Form.Item label="图片">
+                    <ImageUpload
+                        value={Image}
+                        onChange={handleImageChange}
+                        text="上传图片"
+                        module='carousel'
+                        aspect={4 / 3}
+                    />
                 </Form.Item>
             </Form>
         </Modal>

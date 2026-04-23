@@ -8,7 +8,7 @@ import {
     TeamOutlined,
 } from '@ant-design/icons';
 import './About.less';
-import { getFrontHonorList } from '@/services/frontend';
+import { getFacilityList, getFrontHonorList } from '@/services/frontend';
 import dayjs from 'dayjs';
 
 const { Title, Paragraph, Text } = Typography;
@@ -16,10 +16,13 @@ const { Title, Paragraph, Text } = Typography;
 const About: React.FC = () => {
     //奖项数据
     const [honorList, SetHonorList] = useState<any[]>([]);
+    //场地数据
+    const [facilityList, SetFacilityList] = useState<any[]>([]);
 
     useEffect(() => {
         document.title = '机构介绍';
-        fetchHonorList()
+        fetchHonorList();
+        fetchFacilityList();
     }, []);
 
     // 获取荣誉奖项数据
@@ -28,6 +31,18 @@ const About: React.FC = () => {
             const res = await getFrontHonorList();
             if (res?.success) {
                 SetHonorList(res?.data?.list || []);
+            }
+        } catch (error) {
+            console.error('获取数据失败:', error);
+        }
+    };
+
+    // 获取场地数据
+    const fetchFacilityList = async () => {
+        try {
+            const res = await getFacilityList();
+            if (res?.success) {
+                SetFacilityList(res?.data?.list || []);
             }
         } catch (error) {
             console.error('获取数据失败:', error);
@@ -127,29 +142,42 @@ const About: React.FC = () => {
             </section>}
 
             {/* 场地设施区块 */}
-            <section className="venue-section">
+            {facilityList?.length > 0 && <section className="venue-section">
                 <div className="section-header">
                     <EnvironmentOutlined className="section-icon" />
                     <Title level={2} className="section-title">场地设施</Title>
                 </div>
                 <Row gutter={[24, 24]}>
-                    {[
-                        { title: '主训练场', desc: '国际标准11人制天然草坪球场，配备专业照明系统' },
-                        { title: '室内训练馆', desc: '全天候恒温室内场馆，面积3000平方米' },
-                        { title: '体能训练中心', desc: '配备全套专业体能训练器材及恢复设备' },
-                    ].map((venue, index) => (
+                    {facilityList.map((venue, index) => (
                         <Col xs={24} sm={12} md={8} key={index}>
-                            <Card className="venue-card" hoverable>
-                                <div className="venue-image">
-                                    <EnvironmentOutlined style={{ fontSize: 36, color: '#4CAF50' }} />
+                            <Card className="venue-card">
+                                <div className="venue-image-wrapper">
+                                    {venue.coverImage ? (
+                                        <Image
+                                            src={venue.coverImage}
+                                            alt={venue.name}
+                                            className="venue-image"
+                                            preview={{ mask: '查看大图' }}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                    ) : (
+                                        <div className="venue-image-fallback">
+                                            <EnvironmentOutlined />
+                                            <span>暂无图片</span>
+                                        </div>
+                                    )}
                                 </div>
-                                <Title level={5}>{venue.title}</Title>
-                                <Paragraph type="secondary">{venue.desc}</Paragraph>
+                                <div className="venue-content">
+                                    <Title level={4} className="venue-title">{venue.name}</Title>
+                                    <Paragraph className="venue-desc" ellipsis={{ rows: 2, expandable: true, symbol: '展开' }}>
+                                        {venue.desc || '暂无描述'}
+                                    </Paragraph>
+                                </div>
                             </Card>
                         </Col>
                     ))}
                 </Row>
-            </section>
+            </section>}
         </div>
     );
 };

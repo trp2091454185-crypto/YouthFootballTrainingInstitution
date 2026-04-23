@@ -26,6 +26,12 @@ export const getFrontHonorList = () => {
     });
 };
 
+export const getFacilityList = () => {
+    return request('/api/v1/frontend/about/facility', {
+        method: 'GET',
+    });
+};
+
 export const getCoachesList = () => {
     return request('/api/v1/frontend/coaches/ListCoaches', {
         method: 'GET',

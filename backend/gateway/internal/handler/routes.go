@@ -291,6 +291,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
+				Path:    "/facility",
+				Handler: frontendabout.GetFacilityHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
 				Path:    "/honor",
 				Handler: frontendabout.GetHonorHandler(serverCtx),
 			},

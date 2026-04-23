@@ -1,0 +1,4 @@
+# 忽略上传图片目录
+backend/static/
+# 忽略后端编辑器配置
+backend/.idea

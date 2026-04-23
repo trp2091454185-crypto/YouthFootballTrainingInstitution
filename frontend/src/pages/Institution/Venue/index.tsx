@@ -99,16 +99,15 @@ const VenueManagement: React.FC = () => {
   const columns: ProColumns<InstitutionFacility>[] = [
     {
       title: '场地图片',
-      dataIndex: 'images',
+      dataIndex: 'coverImage',
       width: 120,
       search: false,
-      render: (images) => {
-        const imageList = images as string[];
-        return imageList && imageList.length > 0 ? (
+      render: (values) => {
+        return values ? (
           <Image
-            src={imageList[0]}
+            src={values}
             alt="场地图片"
-            width={80}
+            width={120}
             height={60}
             style={{ objectFit: 'cover', borderRadius: 4 }}
             preview={{ mask: '查看' }}
@@ -116,7 +115,7 @@ const VenueManagement: React.FC = () => {
         ) : (
           <div
             style={{
-              width: 80,
+              width: 100,
               height: 60,
               backgroundColor: '#f0f0f0',
               borderRadius: 4,
@@ -138,10 +137,9 @@ const VenueManagement: React.FC = () => {
     {
       title: '场地名称',
       dataIndex: 'name',
-      width: 200,
+      width: 120,
       render: (text) => (
         <Space>
-          <EnvironmentOutlined style={{ color: '#52c41a' }} />
           <span style={{ fontWeight: 500 }}>{text}</span>
         </Space>
       ),
@@ -155,7 +153,6 @@ const VenueManagement: React.FC = () => {
       dataIndex: 'description',
       width: 250,
       ellipsis: true,
-      search: false,
       render: (text) => text || '-',
     },
     ...getTimeColumns<any>(),

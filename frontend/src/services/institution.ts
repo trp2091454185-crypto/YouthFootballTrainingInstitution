@@ -38,9 +38,10 @@ export interface InstitutionFacility {
   images?: string[];
   features?: string[];
   sortOrder: number;
-  status: 0 | 1;
+  status: number;
   createdAt?: string;
   updatedAt?: string;
+  coverImage?: string;
 }
 
 // 荣誉奖项表 (institution_honor)
