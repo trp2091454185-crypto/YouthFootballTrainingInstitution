@@ -29,11 +29,6 @@ export default [
             name: '轮播图管理',
             component: './Home/carousel.tsx',
           },
-          // {
-          //   path: '/home/operation',
-          //   name: '操作管理',
-          //   component: './Home/operation.tsx',
-          // },
           {
             path: '/home/content',
             name: '核心优势',
@@ -50,6 +45,18 @@ export default [
             path: '/institution/management',
             name: '信息上传',
             component: './Institution/Management',
+          },
+          {
+            path: '/institution/management/create',
+            name: '新增机构信息',
+            component: './Institution/Management/Edit',
+            hideInMenu: true,
+          },
+          {
+            path: '/institution/management/edit/:id',
+            name: '编辑机构信息',
+            component: './Institution/Management/Edit',
+            hideInMenu: true,
           },
           {
             path: '/institution/award',

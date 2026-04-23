@@ -1,0 +1,847 @@
+// ==================== 全局容器 ====================
+.detailContainer {
+    padding: 0;
+    min-height: calc(100vh - 180px);
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+
+    // ==================== 左侧面板 ====================
+    .left-panel {
+
+        // ---------- 机构头部名片 ----------
+        .institution-header {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.06);
+
+            .header-bg {
+                height: 80px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                position: relative;
+
+                .header-pattern {
+                    position: absolute;
+                    inset: 0;
+                    background-image: radial-gradient(circle at 20% 50%,
+                            rgba(255, 255, 255, 0.15) 0%,
+                            transparent 50%),
+                        radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 40%);
+                }
+            }
+
+            .header-content {
+                position: relative;
+                background: #fff;
+                padding: 24px 28px 28px;
+                margin-top: -50px;
+            }
+
+            .institution-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #fff;
+                padding: 4px 14px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 500;
+                margin-bottom: 16px;
+                box-shadow: 0 2px 8px rgba(102, 126, 234, 0.35);
+            }
+
+            .institution-name {
+                font-size: 26px;
+                font-weight: 700;
+                color: #1a1a2e;
+                margin: 0 0 8px;
+                letter-spacing: 0.5px;
+                line-height: 1.3;
+            }
+
+            .institution-slogan {
+                color: #7c7c8e;
+                font-size: 15px;
+                font-style: italic;
+                margin: 0 0 16px;
+                line-height: 1.5;
+            }
+
+            .institution-meta {
+                display: flex;
+                align-items: center;
+
+                .founded-date-card {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 12px;
+                    // background: linear-gradient(135deg, #e8f4ff 0%, #f0f0ff 100%);
+                    // border: 1px solid rgba(102, 126, 234, 0.15);
+                    // border-radius: 10px;
+                    // padding: 8px 16px;
+
+                    .date-icon-wrap {
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 8px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: #fff;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 15px;
+                        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+                    }
+
+                    .date-info {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+
+                        .date-label {
+                            font-size: 11px;
+                            color: #999;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                        }
+
+                        .date-value {
+                            font-size: 14px;
+                            color: #1a1a2e;
+                            font-weight: 600;
+                            letter-spacing: 0.5px;
+                        }
+                    }
+                }
+            }
+        }
+
+        // ---------- 信息卡片通用样式 ----------
+        .info-card {
+            background: #fff;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow:
+                0 2px 12px rgba(0, 0, 0, 0.04),
+                0 1px 4px rgba(0, 0, 0, 0.03);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow:
+                    0 8px 24px rgba(0, 0, 0, 0.08),
+                    0 2px 8px rgba(0, 0, 0, 0.04);
+            }
+
+            .card-title-bar {
+                display: flex;
+                align-items: center;
+                padding: 18px 24px;
+                border-bottom: 1px solid #f0f2f5;
+                font-size: 16px;
+                font-weight: 600;
+                color: #1a1a2e;
+
+                .card-icon {
+                    font-size: 18px;
+                    margin-right: 10px;
+                    color: #667eea;
+                    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.08) 100%);
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .title-divider {
+                    margin: 0 12px;
+                    border-color: #e8e8e8;
+                    height: 14px;
+                }
+
+                .card-hint {
+                    font-size: 13px;
+                    font-weight: 400;
+                    color: #999;
+                }
+            }
+
+            .card-content {
+                padding: 22px 24px;
+            }
+        }
+
+        // ---------- 机构简介卡片 ----------
+        .card-intro {
+            .intro-text {
+                color: #555;
+                font-size: 14px;
+                line-height: 1.85;
+                margin: 0;
+                text-align: justify;
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+        }
+
+        // ---------- 联系方式卡片 ----------
+        .card-contact {
+            .contact-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                margin-bottom: 20px;
+
+                .contact-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                    padding: 16px;
+                    background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
+                    border-radius: 12px;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        background: linear-gradient(135deg, #f0f3ff 0%, #eef1fa 100%);
+                    }
+
+                    .contact-icon-wrap {
+                        width: 44px;
+                        height: 44px;
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px;
+                        flex-shrink: 0;
+
+                        &.phone {
+                            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                            color: #fff;
+                            box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+                        }
+
+                        &.email {
+                            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+                            color: #667eea;
+                            box-shadow: 0 4px 12px rgba(168, 237, 234, 0.3);
+                        }
+                    }
+
+                    .contact-detail {
+                        display: flex;
+                        flex-direction: column;
+                        min-width: 0;
+                        overflow: hidden;
+
+                        .contact-label {
+                            font-size: 12px;
+                            color: #999;
+                            margin-bottom: 4px;
+                        }
+
+                        .contact-value {
+                            font-size: 14px;
+                            color: #333;
+                            font-weight: 500;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                }
+            }
+
+            .address-section {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                padding: 16px;
+                background: linear-gradient(135deg, #fff5f5 0%, #fef0f0 100%);
+                border-radius: 12px;
+                border-left: 3px solid #ff7875;
+
+                .address-icon-wrap {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 10px;
+                    background: linear-gradient(135deg, #ff7875 0%, #ff4d4f 100%);
+                    color: #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 17px;
+                    flex-shrink: 0;
+                }
+
+                .address-info {
+                    flex: 1;
+
+                    .address-label {
+                        font-size: 12px;
+                        color: #999;
+                        display: block;
+                        margin-bottom: 6px;
+                    }
+
+                    .address-text {
+                        color: #555;
+                        font-size: 14px;
+                        line-height: 1.6;
+                        margin: 0;
+                    }
+                }
+            }
+        }
+
+        // ---------- 运营信息卡片 ----------
+        .card-operation {
+            .operation-item {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 18px 20px;
+                background: linear-gradient(135deg, #f0fff4 0%, #e6fffb 100%);
+                border-radius: 12px;
+                border-left: 3px solid #52c41a;
+
+                .operation-icon {
+                    width: 42px;
+                    height: 42px;
+                    border-radius: 11px;
+                    background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+                    color: #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 18px;
+                    flex-shrink: 0;
+                }
+
+                .operation-detail {
+                    display: flex;
+                    flex-direction: column;
+
+                    .operation-label {
+                        font-size: 12px;
+                        color: #999;
+                        margin-bottom: 4px;
+                    }
+
+                    .operation-value {
+                        font-size: 15px;
+                        color: #333;
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+    }
+
+    // ==================== 右侧面板 ====================
+    .right-panel {
+
+        // ---------- 品牌形象卡片 ----------
+        .brand-card {
+            background: #fff;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow:
+                0 2px 12px rgba(0, 0, 0, 0.04),
+                0 1px 4px rgba(0, 0, 0, 0.03);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow:
+                    0 8px 24px rgba(0, 0, 0, 0.08),
+                    0 2px 8px rgba(0, 0, 0, 0.04);
+            }
+
+            .brand-card-header {
+                display: flex;
+                align-items: center;
+                padding: 16px 20px;
+                border-bottom: 1px solid #f0f2f5;
+                font-size: 15px;
+                font-weight: 600;
+                color: #1a1a2e;
+
+                .brand-icon {
+                    font-size: 17px;
+                    margin-right: 10px;
+                    color: #764ba2;
+                }
+            }
+
+            .brand-card-body {
+                padding: 20px;
+            }
+        }
+
+        // Logo + 二维码 并排容器
+        .brand-showcase-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .brand-showcase {
+            flex: 1;
+
+            .showcase-label {
+                font-size: 13px;
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 14px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .showcase-image-wrapper {
+                display: flex;
+                justify-content: center;
+                background: linear-gradient(135deg, #fafbfc 0%, #f0f2f5 100%);
+                border-radius: 12px;
+                border: 2px dashed #e0e0e0;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    border-color: #c0c0c0;
+                    background: linear-gradient(135deg, #f5f7fa 0%, #ebecef 100%);
+                }
+
+                .showcase-image {
+                    width: 100%;
+                    object-fit: contain;
+                    border-radius: 10px;
+                    transition: all 0.3s ease;
+
+                }
+
+                .showcase-placeholder {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 32px 20px;
+                    color: #bbb;
+
+                    .placeholder-icon {
+                        font-size: 36px;
+                        opacity: 0.5;
+                    }
+
+                    span {
+                        font-size: 13px;
+                    }
+
+                }
+            }
+        }
+
+        // ---------- 时间轴卡片 ----------
+        .timeline-card {
+            background: #fff;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow:
+                0 2px 12px rgba(0, 0, 0, 0.04),
+                0 1px 4px rgba(0, 0, 0, 0.03);
+
+            .timeline-card-header {
+                display: flex;
+                align-items: center;
+                padding: 16px 20px;
+                border-bottom: 1px solid #f0f2f5;
+                font-size: 15px;
+                font-weight: 600;
+                color: #1a1a2e;
+
+                .timeline-icon {
+                    font-size: 17px;
+                    margin-right: 10px;
+                    color: #faad14;
+                }
+            }
+
+            .timeline-card-body {
+                padding: 20px 24px;
+            }
+
+            .timeline-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                position: relative;
+
+                .timeline-dot {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    margin-top: 4px;
+                    flex-shrink: 0;
+                    z-index: 1;
+
+                    &.create {
+                        background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+                        box-shadow: 0 0 0 4px rgba(82, 196, 26, 0.15);
+                    }
+
+                    &.update {
+                        background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+                        box-shadow: 0 0 0 4px rgba(24, 144, 255, 0.15);
+                    }
+                }
+
+                .timeline-content {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    padding-bottom: 20px;
+
+                    .timeline-label {
+                        font-size: 12px;
+                        color: #999;
+                    }
+
+                    .timeline-value {
+                        font-size: 14px;
+                        color: #333;
+                        font-weight: 500;
+                        font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+                    }
+                }
+            }
+
+        }
+
+        // ---------- 快捷操作卡片 ----------
+        .action-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow:
+                0 2px 12px rgba(0, 0, 0, 0.04),
+                0 1px 4px rgba(0, 0, 0, 0.03);
+
+            .edit-action-btn {
+                height: 48px;
+                font-size: 15px;
+                font-weight: 600;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+                transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 24px rgba(102, 126, 234, 0.45);
+                    background: linear-gradient(135deg, #7c94f4 0%, #8860b4 100%) !important;
+                    color: #fff !important;
+                }
+
+                &:active {
+                    transform: translateY(0);
+                }
+            }
+        }
+    }
+}
+
+// ==================== 空状态样式 ====================
+.empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 480px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 60px 40px;
+
+    .empty-content {
+        text-align: center;
+
+        .empty-icon-wrapper {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 36px rgba(102, 126, 234, 0.35);
+
+            .empty-icon {
+                font-size: 42px;
+                color: #fff;
+            }
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 0 0 10px;
+        }
+
+        .empty-desc {
+            color: #999;
+            font-size: 15px;
+            margin: 0 0 32px;
+        }
+
+        .create-btn {
+            height: 48px;
+            padding: 0 36px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 28px rgba(102, 126, 234, 0.5);
+                background: linear-gradient(135deg, #7c94f4 0%, #8860b4 100%) !important;
+                color: #fff !important;
+            }
+        }
+    }
+}
+
+// ==================== 响应式适配 ====================
+@media (max-width: 1200px) {
+    .detailContainer {
+        .left-panel {
+            .institution-header {
+                .header-bg {
+                    height: 120px;
+                }
+
+                .header-content {
+                    padding: 20px 24px 24px;
+                    margin-top: -45px;
+                }
+
+                .institution-name {
+                    font-size: 22px;
+                }
+
+                .institution-meta .founded-date-card {
+                    padding: 6px 12px;
+                    gap: 10px;
+
+                    .date-icon-wrap {
+                        width: 28px;
+                        height: 28px;
+                        font-size: 13px;
+                        border-radius: 6px;
+                    }
+
+                    .date-info {
+                        .date-label {
+                            font-size: 10px;
+                        }
+
+                        .date-value {
+                            font-size: 13px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .right-panel {
+            .brand-showcase {
+                .showcase-image-wrapper .showcase-image {
+                    max-width: 150px;
+                    max-height: 150px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    .detailContainer {
+        .left-panel {
+            .info-card {
+                margin-bottom: 16px;
+                border-radius: 14px;
+
+                .card-title-bar {
+                    padding: 14px 18px;
+                }
+
+                .card-content {
+                    padding: 18px;
+                }
+            }
+
+            .card-contact {
+                .contact-grid {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
+            }
+        }
+
+        .right-panel {
+
+            .brand-card,
+            .timeline-card,
+            .action-card {
+                border-radius: 14px;
+                margin-bottom: 16px;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .detailContainer {
+        background: #f5f7fa;
+
+        .left-panel {
+            .institution-header {
+                border-radius: 14px;
+
+                .header-bg {
+                    height: 110px;
+                }
+
+                .header-content {
+                    padding: 18px 18px 22px;
+                    margin-top: -40px;
+                }
+
+                .institution-name {
+                    font-size: 20px;
+                }
+
+                .institution-meta .founded-date-card {
+                    padding: 6px 12px;
+                    gap: 8px;
+
+                    .date-icon-wrap {
+                        width: 26px;
+                        height: 26px;
+                        font-size: 12px;
+                    }
+
+                    .date-info {
+                        .date-label {
+                            font-size: 10px;
+                        }
+
+                        .date-value {
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+
+            .info-card {
+                border-radius: 12px;
+
+                .card-title-bar {
+                    padding: 14px 16px;
+                    font-size: 15px;
+                }
+
+                .card-content {
+                    padding: 16px;
+                }
+            }
+
+            .card-contact {
+                .contact-grid {
+                    gap: 10px;
+                }
+
+                .address-section {
+                    padding: 14px;
+                }
+            }
+
+            .card-operation {
+                .operation-item {
+                    padding: 14px 16px;
+                }
+            }
+        }
+
+        .right-panel {
+
+            // 小屏下品牌展示区纵向堆叠
+            .brand-showcase-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .brand-showcase {
+                .showcase-image-wrapper {
+                    .showcase-image {
+                        max-height: 120px;
+                    }
+
+                    &.qr-wrapper .showcase-image.qr-image {
+                        max-width: 110px;
+                        max-height: 100px;
+                    }
+                }
+            }
+
+            .action-card {
+                padding: 16px;
+            }
+        }
+    }
+
+    .empty-state {
+        min-height: 360px;
+        border-radius: 16px;
+        padding: 40px 24px;
+
+        .empty-content {
+            .empty-icon-wrapper {
+                width: 80px;
+                height: 80px;
+                border-radius: 22px;
+                margin-bottom: 20px;
+
+                .empty-icon {
+                    font-size: 34px;
+                }
+            }
+
+            .empty-title {
+                font-size: 20px;
+            }
+
+            .empty-desc {
+                font-size: 14px;
+            }
+
+            .create-btn {
+                height: 44px;
+                padding: 0 28px;
+                font-size: 15px;
+                border-radius: 12px;
+            }
+        }
+    }
+}

@@ -5,25 +5,18 @@ package info
 
 import (
 	"context"
-	"encoding/json"
-	"math"
-	"server/common/result"
 	"server/models"
 
 	"server/gateway/internal/svc"
 
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
 )
 
 type (
-	ListInfoReq struct {
-		models.InstitutionInfo
-		result.PageParams
-	}
-
 	ListLibResp struct {
-		result.PageResult
-		List []models.InstitutionInfo `json:"list"`
+		Data models.InstitutionInfo `json:"data"`
 	}
 )
 type ListInfoLogic struct {
@@ -40,35 +33,19 @@ func NewListInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListInfo
 	}
 }
 
-func (l *ListInfoLogic) ListInfo(req *ListInfoReq) (*ListLibResp, error) {
+func (l *ListInfoLogic) ListInfo() (*ListLibResp, error) {
 	db := l.svcCtx.DB.Model(&models.InstitutionInfo{})
-	//搜索
-	if req.Keyword != "" {
-		db = db.Where("name LIKE ?", "%"+req.Keyword+"%")
+	// 查询
+	var data models.InstitutionInfo
+	if err := db.First(&data).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		} else {
+			l.Logger.Errorf("查询机构信息失败，异常：%v", err)
+			return nil, err
+		}
 	}
-	// 分页
-	pager := req.PageParams
-	res := ListLibResp{
-		PageResult: result.PageResult{
-			PageSize: pager.PageSize,
-			Current:  pager.Current,
-			Offset:   pager.PageSize * (pager.Current - 1),
-		},
-	}
-	// 总数
-	if err := db.Count(&res.Total).Error; err != nil {
-		reqStr, _ := json.Marshal(req)
-		l.Logger.Errorf("查询信息列表失败，参数：%s，异常：%v", reqStr, err)
-		return nil, err
-	}
-	// 查询列表
-	var list []models.InstitutionInfo
-	if err := db.Limit(res.PageSize).Offset(res.Offset).Find(&list).Error; err != nil {
-		reqStr, _ := json.Marshal(req)
-		l.Logger.Errorf("查询信息列表失败，参数：%s，异常：%v", reqStr, err)
-		return nil, err
-	}
-	res.List = list
-	res.Pages = int64(math.Ceil(float64(res.Total) / float64(res.PageSize)))
-	return &res, nil
+	return &ListLibResp{
+		Data: data,
+	}, nil
 }

@@ -111,6 +111,7 @@ const CoreAdvantageForm: React.FC<CoreAdvantageFormProps> = ({
                 <Form.Item
                     name="description"
                     label="描述"
+                    rules={[{ required: true, message: '未填写描述' }]}
                 >
                     <TextArea placeholder="请输入描述" rows={3} maxLength={200} showCount />
                 </Form.Item>

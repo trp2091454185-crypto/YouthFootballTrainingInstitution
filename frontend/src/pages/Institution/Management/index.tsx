@@ -1,79 +1,310 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from '@umijs/max';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Row, Col, Statistic } from 'antd';
-import { UserOutlined, TeamOutlined, TrophyOutlined, AccountBookOutlined } from '@ant-design/icons';
+import {
+  Button,
+  message,
+  Row,
+  Col,
+  Divider,
+  Tooltip,
+} from 'antd';
+import {
+  EditOutlined,
+  BankOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  EnvironmentOutlined,
+  ClockCircleOutlined,
+  CalendarOutlined,
+  InfoCircleOutlined,
+  WechatOutlined,
+  PictureOutlined,
+  ThunderboltOutlined,
+  SafetyCertificateOutlined,
+} from '@ant-design/icons';
+import dayjs from 'dayjs';
+import { getInstitutionInfo, InstitutionInfo } from '@/services/institution';
+import './index.less';
 
-const Dashboard: React.FC = () => {
-  useEffect(() => {
-    document.title = '信息上传';
+const InstitutionDetail: React.FC = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [institutionData, setInstitutionData] = useState<InstitutionInfo | null>(null);
+
+  // 加载机构信息
+  const fetchInstitutionInfo = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await getInstitutionInfo();
+      if (res?.data) {
+        const data = res.data?.data as InstitutionInfo;
+        setInstitutionData(data);
+      }
+    } catch (error) {
+      console.error('获取机构信息失败:', error);
+      message.error('获取机构信息失败');
+    } finally {
+      setLoading(false);
+    }
   }, []);
-  return (
-    <PageContainer>
-      <Row gutter={16}>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="会员总数"
-              value={1128}
-              prefix={<UserOutlined />}
-              valueStyle={{ color: '#3f8600' }}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="球队总数"
-              value={93}
-              prefix={<TeamOutlined />}
-              valueStyle={{ color: '#cf1322' }}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="球员总数"
-              value={456}
-              prefix={<TeamOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="比赛场次"
-              value={112}
-              prefix={<TrophyOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row>
 
-      <Row gutter={16} style={{ marginTop: 16 }}>
-        <Col span={12}>
-          <Card title="财务概况" bordered={false}>
-            <Statistic
-              title="本月收入"
-              value={11280}
-              precision={2}
-              prefix={<AccountBookOutlined />}
-              suffix="元"
-            />
-          </Card>
-        </Col>
-        <Col span={12}>
-          <Card title="近期比赛" bordered={false}>
-            <Statistic
-              title="本月比赛"
-              value={12}
-              suffix="场"
-            />
-          </Card>
-        </Col>
-      </Row>
+  useEffect(() => {
+    document.title = '机构信息管理';
+    fetchInstitutionInfo();
+  }, [fetchInstitutionInfo]);
+
+  // 跳转到新建页面
+  const handleCreate = () => {
+    navigate('/institution/management/create');
+  };
+
+  // 跳转到编辑页面
+  const handleEdit = () => {
+    navigate(`/institution/management/edit/${institutionData?.id}`);
+  };
+
+  // 渲染空状态
+  const renderEmptyState = () => (
+    <div className="empty-state">
+      <div className="empty-content">
+        <div className="empty-icon-wrapper">
+          <BankOutlined className="empty-icon" />
+        </div>
+        <h3 className="empty-title">开始构建您的机构档案</h3>
+        <p className="empty-desc">完善机构信息，展现专业形象</p>
+        <Button type="primary" icon={<EditOutlined />} onClick={handleCreate} className="create-btn">
+          创建机构信息
+        </Button>
+      </div>
+    </div>
+  );
+
+  // 渲染左侧内容区
+  const renderLeftPanel = () => (
+    <div className="left-panel">
+      {/* 机构头部名片 */}
+      <div className="institution-header">
+        <div className="header-bg">
+          <div className="header-pattern" />
+        </div>
+        <div className="header-content">
+          <div className="institution-badge">
+            <SafetyCertificateOutlined />
+            <span>认证机构</span>
+          </div>
+          <h1 className="institution-name">{institutionData?.name || '-'}</h1>
+          {institutionData?.slogan && (
+            <p className="institution-slogan">"{institutionData.slogan}"</p>
+          )}
+          {institutionData?.foundedDate && (
+            <div className="institution-meta">
+              <div className="founded-date-card">
+                <div className="date-icon-wrap">
+                  <CalendarOutlined />
+                </div>
+                <div className="date-info">
+                  <span className="date-label">成立于</span>
+                  <span className="date-value">{dayjs(institutionData.foundedDate).format('YYYY年MM月DD日')}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 机构简介卡片 */}
+      <div className="info-card card-intro">
+        <div className="card-title-bar">
+          <InfoCircleOutlined className="card-icon" />
+          <span>机构简介</span>
+        </div>
+        <div className="card-content">
+          <p className="intro-text">{institutionData?.description || '暂无简介信息'}</p>
+        </div>
+      </div>
+
+      {/* 联系方式卡片 */}
+      <div className="info-card card-contact">
+        <div className="card-title-bar">
+          <PhoneOutlined className="card-icon" />
+          <span>联系方式</span>
+          <Divider type="vertical" className="title-divider" />
+          <span className="card-hint">对外联络渠道</span>
+        </div>
+        <div className="card-content">
+          <div className="contact-grid">
+            <div className="contact-item">
+              <div className="contact-icon-wrap phone">
+                <PhoneOutlined />
+              </div>
+              <div className="contact-detail">
+                <span className="contact-label">联系电话</span>
+                <span className="contact-value">{institutionData?.contactPhone || '未设置'}</span>
+              </div>
+            </div>
+            <div className="contact-item">
+              <div className="contact-icon-wrap email">
+                <MailOutlined />
+              </div>
+              <div className="contact-detail">
+                <span className="contact-label">电子邮箱</span>
+                <span className="contact-value">{institutionData?.contactEmail || '未设置'}</span>
+              </div>
+            </div>
+          </div>
+          <div className="address-section">
+            <div className="address-icon-wrap">
+              <EnvironmentOutlined />
+            </div>
+            <div className="address-info">
+              <span className="address-label">详细地址</span>
+              <p className="address-text">{institutionData?.address || '暂未设置详细地址'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 运营信息卡片 */}
+      <div className="info-card card-operation">
+        <div className="card-title-bar">
+          <ThunderboltOutlined className="card-icon" />
+          <span>运营信息</span>
+          <Divider type="vertical" className="title-divider" />
+          <span className="card-hint">营业参数配置</span>
+        </div>
+        <div className="card-content">
+          <div className="operation-item">
+            <ClockCircleOutlined className="operation-icon" />
+            <div className="operation-detail">
+              <span className="operation-label">营业时间</span>
+              <span className="operation-value">{institutionData?.businessHours || '未设置营业时间'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // 渲染右侧面板
+  const renderRightPanel = () => (
+    <div className="right-panel">
+      {/* 品牌形象卡片 */}
+      <div className="brand-card">
+        <div className="brand-card-header">
+          <PictureOutlined className="brand-icon" />
+          <span>品牌形象</span>
+        </div>
+        <div className="brand-card-body">
+          {/* Logo 与二维码并排展示区 */}
+          <div className="brand-showcase-row">
+            {/* Logo */}
+            <div className="brand-showcase logo-showcase">
+              <div className="showcase-label">机构 Logo</div>
+              <div className="showcase-image-wrapper">
+                {institutionData?.logo ? (
+                  <img src={institutionData.logo} alt="机构Logo" className="showcase-image" />
+                ) : (
+                  <div className="showcase-placeholder">
+                    <PictureOutlined className="placeholder-icon" />
+                    <span>暂未上传</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* 二维码 */}
+            <div className="brand-showcase qr-showcase">
+              <div className="showcase-label">
+                <WechatOutlined /> 微信二维码
+              </div>
+              <div className="showcase-image-wrapper">
+                {institutionData?.wechatQr ? (
+                  <img src={institutionData.wechatQr} alt="微信二维码" className="showcase-image" />
+                ) : (
+                  <div className="showcase-placeholder">
+                    <WechatOutlined className="placeholder-icon" />
+                    <span>暂未上传</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 时间轴信息卡片 */}
+      <div className="timeline-card">
+        <div className="timeline-card-header">
+          <ClockCircleOutlined className="timeline-icon" />
+          <span>时间记录</span>
+        </div>
+        <div className="timeline-card-body">
+          <div className="timeline-item">
+            <div className="timeline-dot create" />
+            <div className="timeline-content">
+              <span className="timeline-label">创建时间</span>
+              <span className="timeline-value">
+                {institutionData?.createdAt ? dayjs(institutionData.createdAt).format('YYYY-MM-DD HH:mm') : '-'}
+              </span>
+            </div>
+          </div>
+          <div className="timeline-item">
+            <div className="timeline-dot update" />
+            <div className="timeline-content">
+              <span className="timeline-label">最后更新</span>
+              <span className="timeline-value">
+                {institutionData?.updatedAt ? dayjs(institutionData.updatedAt).format('YYYY-MM-DD HH:mm') : '-'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 快捷操作卡片 */}
+      <div className="action-card">
+        <Tooltip title="编辑机构信息" placement="left">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={handleEdit}
+            className="edit-action-btn"
+            block
+            size="large"
+          >
+            编辑信息
+          </Button>
+        </Tooltip>
+      </div>
+    </div>
+  );
+
+  return (
+    <PageContainer
+      loading={loading}
+      breadcrumb={{
+        items: [
+          { title: '机构管理' },
+          { title: '机构信息' },
+        ],
+      }}
+    >
+      {!institutionData && !loading ? (
+        renderEmptyState()
+      ) : (
+        <div className="detailContainer">
+          <Row gutter={[24, 0]}>
+            <Col xs={24} xl={16}>
+              {renderLeftPanel()}
+            </Col>
+            <Col xs={24} xl={8}>
+              {renderRightPanel()}
+            </Col>
+          </Row>
+        </div>
+      )}
     </PageContainer>
   );
 };
 
-export default Dashboard;
+export default InstitutionDetail;

@@ -62,14 +62,23 @@ export interface InstitutionHonor {
 
 // 获取机构信息
 export const getInstitutionInfo = () => {
-  return request('/api/institution/info', {
+  return request('/api/v1/institution/info', {
     method: 'GET',
   });
 };
 
+// 新建机构信息
+export const createInstitutionInfo = (data: InstitutionInfo) => {
+  return request('/api/v1/institution/info', {
+    method: 'POST',
+    data,
+  });
+};
+
+
 // 更新机构信息
-export const updateInstitutionInfo = (data: InstitutionInfo) => {
-  return request('/api/institution/info', {
+export const updateInstitutionInfo = (id: string, data: InstitutionInfo) => {
+  return request(`/api/v1/institution/info/${id}`, {
     method: 'PUT',
     data,
   });
