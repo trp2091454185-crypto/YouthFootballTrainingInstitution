@@ -20,8 +20,6 @@ import {
   InfoCircleOutlined,
   WechatOutlined,
   PictureOutlined,
-  ThunderboltOutlined,
-  SafetyCertificateOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { getInstitutionInfo, InstitutionInfo } from '@/services/institution';
@@ -89,10 +87,10 @@ const InstitutionDetail: React.FC = () => {
           <div className="header-pattern" />
         </div>
         <div className="header-content">
-          <div className="institution-badge">
+          {/* <div className="institution-badge">
             <SafetyCertificateOutlined />
             <span>认证机构</span>
-          </div>
+          </div> */}
           <h1 className="institution-name">{institutionData?.name || '-'}</h1>
           {institutionData?.slogan && (
             <p className="institution-slogan">"{institutionData.slogan}"</p>
@@ -124,61 +122,56 @@ const InstitutionDetail: React.FC = () => {
         </div>
       </div>
 
-      {/* 联系方式卡片 */}
-      <div className="info-card card-contact">
+      {/* 联系与运营卡片（合并） */}
+      <div className="info-card card-contact-operation">
         <div className="card-title-bar">
           <PhoneOutlined className="card-icon" />
           <span>联系方式</span>
-          <Divider type="vertical" className="title-divider" />
-          <span className="card-hint">对外联络渠道</span>
         </div>
         <div className="card-content">
-          <div className="contact-grid">
-            <div className="contact-item">
-              <div className="contact-icon-wrap phone">
+          <div className="info-grid">
+            {/* 联系电话 */}
+            <div className="info-item">
+              <div className="info-icon-wrap phone">
                 <PhoneOutlined />
               </div>
-              <div className="contact-detail">
-                <span className="contact-label">联系电话</span>
-                <span className="contact-value">{institutionData?.contactPhone || '未设置'}</span>
+              <div className="info-detail">
+                <span className="info-label">联系电话</span>
+                <span className="info-value">{institutionData?.contactPhone || '未设置'}</span>
               </div>
             </div>
-            <div className="contact-item">
-              <div className="contact-icon-wrap email">
+
+            {/* 电子邮箱 */}
+            <div className="info-item">
+              <div className="info-icon-wrap email">
                 <MailOutlined />
               </div>
-              <div className="contact-detail">
-                <span className="contact-label">电子邮箱</span>
-                <span className="contact-value">{institutionData?.contactEmail || '未设置'}</span>
+              <div className="info-detail">
+                <span className="info-label">电子邮箱</span>
+                <span className="info-value">{institutionData?.contactEmail || '未设置'}</span>
               </div>
             </div>
-          </div>
-          <div className="address-section">
-            <div className="address-icon-wrap">
-              <EnvironmentOutlined />
-            </div>
-            <div className="address-info">
-              <span className="address-label">详细地址</span>
-              <p className="address-text">{institutionData?.address || '暂未设置详细地址'}</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* 运营信息卡片 */}
-      <div className="info-card card-operation">
-        <div className="card-title-bar">
-          <ThunderboltOutlined className="card-icon" />
-          <span>运营信息</span>
-          <Divider type="vertical" className="title-divider" />
-          <span className="card-hint">营业参数配置</span>
-        </div>
-        <div className="card-content">
-          <div className="operation-item">
-            <ClockCircleOutlined className="operation-icon" />
-            <div className="operation-detail">
-              <span className="operation-label">营业时间</span>
-              <span className="operation-value">{institutionData?.businessHours || '未设置营业时间'}</span>
+            {/* 详细地址 */}
+            <div className="info-item info-item-wide address">
+              <div className="info-icon-wrap addr">
+                <EnvironmentOutlined />
+              </div>
+              <div className="info-detail">
+                <span className="info-label">详细地址</span>
+                <p className="info-value-text">{institutionData?.address || '暂未设置详细地址'}</p>
+              </div>
+            </div>
+
+            {/* 营业时间 */}
+            <div className="info-item info-item-wide operation">
+              <div className="info-icon-wrap time">
+                <ClockCircleOutlined />
+              </div>
+              <div className="info-detail">
+                <span className="info-label">营业时间</span>
+                <span className="info-value">{institutionData?.businessHours || '未设置'}</span>
+              </div>
             </div>
           </div>
         </div>

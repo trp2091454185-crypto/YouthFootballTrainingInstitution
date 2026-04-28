@@ -32,6 +32,13 @@ export const getFacilityList = () => {
     });
 };
 
+export const getInfo = () => {
+    return request('/api/v1/frontend/about/info', {
+        method: 'GET',
+    });
+};
+
+
 export const getCoachesList = () => {
     return request('/api/v1/frontend/coaches/ListCoaches', {
         method: 'GET',

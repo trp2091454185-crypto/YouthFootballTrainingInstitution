@@ -13,4 +13,8 @@ service gateway {
     //获取场地设施展示信息
     @handler GetFacility
     get /facility
+
+    //获取机构信息展示信息
+    @handler GetInfo
+    get /info
 }

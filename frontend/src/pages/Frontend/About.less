@@ -14,6 +14,15 @@
 
             @media (max-width: 768px) {
                 flex-direction: column;
+
+                .banner-image {
+                    width: 100%;
+
+                    .banner-img,
+                    .image-placeholder {
+                        height: 220px;
+                    }
+                }
             }
 
             .banner-text {
@@ -44,6 +53,18 @@
             .banner-image {
                 flex-shrink: 0;
                 width: 360px;
+
+                .banner-img {
+                    width: 100%;
+                    height: 260px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    box-shadow:
+                        0 4px 0px rgba(0, 0, 0, 0.1),
+                        0 1px 0px rgba(0, 0, 0, 0.06);
+                    transition: all 0.35s ease;
+
+                }
 
                 .image-placeholder {
                     width: 100%;

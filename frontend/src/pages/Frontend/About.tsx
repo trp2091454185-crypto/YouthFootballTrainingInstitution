@@ -8,7 +8,7 @@ import {
     TeamOutlined,
 } from '@ant-design/icons';
 import './About.less';
-import { getFacilityList, getFrontHonorList } from '@/services/frontend';
+import { getFacilityList, getFrontHonorList, getInfo } from '@/services/frontend';
 import dayjs from 'dayjs';
 
 const { Title, Paragraph, Text } = Typography;
@@ -18,11 +18,14 @@ const About: React.FC = () => {
     const [honorList, SetHonorList] = useState<any[]>([]);
     //场地数据
     const [facilityList, SetFacilityList] = useState<any[]>([]);
+    //机构信息数据
+    const [info, SetInfo] = useState<any>({});
 
     useEffect(() => {
         document.title = '机构介绍';
         fetchHonorList();
         fetchFacilityList();
+        fetchInfo();
     }, []);
 
     // 获取荣誉奖项数据
@@ -49,6 +52,18 @@ const About: React.FC = () => {
         }
     };
 
+    // 获取场地数据
+    const fetchInfo = async () => {
+        try {
+            const res = await getInfo();
+            if (res?.success) {
+                SetInfo(res?.data || undefined);
+            }
+        } catch (error) {
+            console.error('获取数据失败:', error);
+        }
+    };
+
 
     return (
         <div className="about-page">
@@ -57,20 +72,29 @@ const About: React.FC = () => {
                 <div className="intro-banner">
                     <div className="banner-text">
                         <Tag icon={<ApartmentOutlined />} color="#2E7D32" className="banner-tag">关于我们</Tag>
-                        <Title level={1} className="intro-title">专业铸就品质 · 匠心培育英才</Title>
-                        <Paragraph className="intro-desc">
-                            绿茵青训机构成立于2020年，是一家专注于5-16岁青少年足球培训的专业机构。
-                            我们秉承"以球育人、快乐足球"的教育理念，引进欧洲先进青训体系，
-                            结合中国青少年身心发展特点，打造了一套科学、系统、有趣的足球训练课程。
-                            目前已拥有3个标准训练基地，占地总面积超20000平方米，
-                            在册学员超过500人，是本地最具规模和影响力的足球青训品牌。
-                        </Paragraph>
+                        <Title level={1} className="intro-title">{info?.slogan || '关于我们'}</Title>
+                        <Paragraph className="intro-desc">{info?.desc || ''}</Paragraph>
                     </div>
                     <div className="banner-image">
-                        <div className="image-placeholder">
-                            <ApartmentOutlined style={{ fontSize: 64, color: '#4CAF50' }} />
-                            <span>机构全景</span>
-                        </div>
+                        {(() => {
+                            const imgUrl = info?.wechatQrcodeUrl || info?.logo;
+                            if (imgUrl) {
+                                return (
+                                    <Image
+                                        src={imgUrl}
+                                        alt={info?.name || '机构图片'}
+                                        className="banner-img"
+                                        preview={false}
+                                    />
+                                );
+                            }
+                            return (
+                                <div className="image-placeholder">
+                                    <ApartmentOutlined style={{ fontSize: 64, color: '#4CAF50' }} />
+                                    <span>机构全景</span>
+                                </div>
+                            );
+                        })()}
                     </div>
                 </div>
             </section>
