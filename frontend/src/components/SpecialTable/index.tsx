@@ -33,7 +33,7 @@ interface SpecialTableProps {
   //按钮文本
   buttonText?: string;
   //新建回调函数
-  handleAdd: () => void;
+  handleAdd?: () => void;
   //批量删除回调函数
   handleBatchDelete: () => void;
   // 表格操作引用，用于刷新等操作

@@ -41,10 +41,10 @@ func NewListUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListUser
 }
 
 func (l *ListUserLogic) ListUser(req *ListUserReq) (*ListUserResp, error) {
-	db := l.svcCtx.DB.Model(&models.SysUser{})
+	db := l.svcCtx.DB.Model(&models.SysUser{}).Omit("password")
 	//搜索
 	if req.Keyword != "" {
-		db = db.Where("name LIKE ?", "%"+req.Keyword+"%")
+		db = db.Where("username LIKE ?", "%"+req.Keyword+"%")
 	}
 	// 分页
 	pager := req.PageParams

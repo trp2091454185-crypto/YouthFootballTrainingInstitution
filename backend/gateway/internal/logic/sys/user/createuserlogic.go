@@ -5,6 +5,7 @@ package user
 
 import (
 	"context"
+	"server/common/tools/password"
 	"server/models"
 
 	"server/gateway/internal/svc"
@@ -27,5 +28,13 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(req *models.SysUser) error {
+	// 一键 SM3 哈希 + 编码存储格式: $sm3$<hash>$<salt>
+	var err error
+	req.Password, err = password.EncodePasswordHash(req.Password)
+	if err != nil {
+		l.Errorf("密码加密失败: %v", err)
+		return err
+	}
+
 	return l.svcCtx.DB.Create(req).Error
 }

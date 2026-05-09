@@ -180,11 +180,6 @@ export default [
             component: './System/Users',
           },
           {
-            path: '/system/website',
-            name: '网站配置',
-            component: './System/Website',
-          },
-          {
             path: '/system/log',
             name: '操作日志',
             component: './System/Log',

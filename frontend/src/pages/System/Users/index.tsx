@@ -10,6 +10,8 @@ import {
   Avatar,
   Tooltip,
   Switch,
+  Modal,
+  Input,
 } from 'antd';
 import {
   EditOutlined,
@@ -27,11 +29,8 @@ import {
   resetPassword,
 } from '@/services/system';
 import SpecialTable from '@/components/SpecialTable';
-
-const ROLE_MAP: Record<number, { label: string; color: string }> = {
-  1: { label: '管理员', color: 'blue' },
-  2: { label: '超级管理员', color: 'red' },
-};
+import UserEditModal from './edit';
+import { USER_ROLE } from '@/utils/constant';
 
 const UserManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -42,6 +41,11 @@ const UserManagement: React.FC = () => {
   const [selectedRows, setSelectedRows] = useState<SysUser[]>([]);
   const [detailVisible, setDetailVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<SysUser | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editRecord, setEditRecord] = useState<SysUser | null>(null);
+  const [resetModalOpen, setResetModalOpen] = useState(false);
+  const [resetRecord, setResetRecord] = useState<SysUser | null>(null);
+  const [newPassword, setNewPassword] = useState('123456');
 
   // 获取用户列表
   const fetchUserList = async (params: SysUserListParams) => {
@@ -107,28 +111,59 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  // 处理重置密码
-  const handleResetPassword = async (id: string) => {
+  // 打开重置密码弹窗
+  const handleOpenReset = (record: SysUser) => {
+    setResetRecord(record);
+    setNewPassword('123456');
+    setResetModalOpen(true);
+  };
+
+  // 处理重置密码确认
+  const handleResetPassword = async () => {
+    if (!resetRecord?.id) return;
     try {
-      const res = await resetPassword(id, '123456');
+      const res = await resetPassword(resetRecord.id, newPassword);
       if (res.success) {
-        message.success('密码已重置为: 123456');
+        message.success(`用户 "${resetRecord.username}" 密码已重置`);
+        setResetModalOpen(false);
+        setResetRecord(null);
       } else {
         message.error(res.errorMessage || '重置密码失败');
       }
-    } catch (error) {
+    } catch {
       message.error('重置密码失败');
     }
   };
 
-  // 跳转到新增页面
-  const handleAdd = () => {
-    navigate('/system/users/create');
+  // 关闭重置密码弹窗
+  const handleCloseReset = () => {
+    setResetModalOpen(false);
+    setResetRecord(null);
   };
 
-  // 跳转到编辑页面
+  // 打开新增弹窗
+  const handleAdd = () => {
+    setEditRecord(null);
+    setEditModalOpen(true);
+  };
+
+  // 打开编辑弹窗
   const handleEdit = (record: SysUser) => {
-    navigate(`/system/users/edit/${record.id}`);
+    setEditRecord(record);
+    setEditModalOpen(true);
+  };
+
+  // 弹窗操作成功
+  const handleEditSuccess = () => {
+    setEditModalOpen(false);
+    setEditRecord(null);
+    actionRef.current?.reload();
+  };
+
+  // 关闭编辑弹窗
+  const handleEditCancel = () => {
+    setEditModalOpen(false);
+    setEditRecord(null);
   };
 
   // 查看详情
@@ -151,13 +186,6 @@ const UserManagement: React.FC = () => {
       width: 150,
       render: (text, record) => (
         <Space>
-          <Avatar
-            size="small"
-            icon={<UserOutlined />}
-            style={{
-              backgroundColor: record.role === 2 ? '#cf1322' : '#1890ff',
-            }}
-          />
           <span style={{ fontWeight: 500 }}>{text}</span>
         </Space>
       ),
@@ -168,14 +196,11 @@ const UserManagement: React.FC = () => {
       width: 120,
       valueType: 'select',
       fieldProps: {
-        options: [
-          { label: '管理员', value: 1 },
-          { label: '超级管理员', value: 2 },
-        ],
+        options: { USER_ROLE }
       },
       render: (_, record) => {
-        const role = ROLE_MAP[record.role];
-        return <Tag color={role?.color}>{role?.label || '未知'}</Tag>;
+        const role = USER_ROLE[record.role];
+        return <>{role?.label || '未知'}</>;
       },
     },
     {
@@ -190,23 +215,6 @@ const UserManagement: React.FC = () => {
       width: 180,
       copyable: true,
       ellipsis: true,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      width: 100,
-      valueType: 'select',
-      fieldProps: {
-        options: [
-          { label: '启用', value: 1 },
-          { label: '禁用', value: 0 },
-        ],
-      },
-      render: (_, record) => (
-        <Tag color={record.status === 1 ? 'success' : 'default'}>
-          {record.status === 1 ? '启用' : '禁用'}
-        </Tag>
-      ),
     },
     {
       title: '最后登录',
@@ -237,13 +245,6 @@ const UserManagement: React.FC = () => {
       search: false,
       render: (_, record) => (
         <Space size="small">
-          <Tooltip title="查看详情">
-            <Button
-              type="text"
-              icon={<EyeOutlined />}
-              onClick={() => handleViewDetail(record)}
-            />
-          </Tooltip>
           <Tooltip title="编辑">
             <Button
               type="text"
@@ -252,23 +253,10 @@ const UserManagement: React.FC = () => {
             />
           </Tooltip>
           <Tooltip title="重置密码">
-            <Popconfirm
-              title="确认重置密码"
-              description={`确定要重置用户 "${record.username}" 的密码吗？重置后密码为: 123456`}
-              onConfirm={() => handleResetPassword(record.id!)}
-              okText="确定"
-              cancelText="取消"
-            >
-              <Button type="text" icon={<LockOutlined />} />
-            </Popconfirm>
-          </Tooltip>
-          <Tooltip title={record.status === 1 ? '禁用' : '启用'}>
-            <Switch
-              size="small"
-              checked={record.status === 1}
-              onChange={(checked) =>
-                handleStatusChange(record.id!, checked ? 1 : 0)
-              }
+            <Button
+              type="text"
+              icon={<LockOutlined />}
+              onClick={() => handleOpenReset(record)}
             />
           </Tooltip>
           <Tooltip title="删除">
@@ -308,6 +296,34 @@ const UserManagement: React.FC = () => {
           },
         ]}
       />
+      <UserEditModal
+        open={editModalOpen}
+        editRecord={editRecord}
+        onSuccess={handleEditSuccess}
+        onCancel={handleEditCancel}
+      />
+      <Modal
+        title="重置密码"
+        open={resetModalOpen}
+        onOk={handleResetPassword}
+        onCancel={handleCloseReset}
+        okText="确认重置"
+        cancelText="取消"
+        width={420}
+      >
+        <div style={{ marginBottom: 16, color: '#666' }}>
+          确定要重置用户 <strong>{resetRecord?.username}</strong> 的密码吗？
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ whiteSpace: 'nowrap' }}>新密码：</span>
+          <Input.Password
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="请输入新密码"
+            style={{ flex: 1 }}
+          />
+        </div>
+      </Modal>
     </>
   );
 };

@@ -5,6 +5,7 @@ package user
 
 import (
 	"context"
+	"server/common/tools/password"
 	"server/models"
 
 	"server/gateway/internal/svc"
@@ -27,5 +28,14 @@ func NewUpdateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 }
 
 func (l *UpdateUserLogic) UpdateUser(req *models.SysUser) error {
+	if req.Password != "" {
+		var err error
+		req.Password, err = password.EncodePasswordHash(req.Password)
+		if err != nil {
+			l.Errorf("密码加密失败: %v", err)
+			return err
+		}
+	}
+
 	return l.svcCtx.DB.Updates(req).Error
 }

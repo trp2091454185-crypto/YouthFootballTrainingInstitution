@@ -86,4 +86,9 @@ export const CHANNEL = [
   { label: '其他', value: 'other' },
 ] as const;
 
+export const USER_ROLE = [
+  { label: '管理员', value: 1 },
+  { label: '学员', value: 2 },
+  { label: '家长', value: 3 },
+] as const;
 

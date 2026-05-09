@@ -98,7 +98,7 @@ export const changePassword = (data: { oldPassword: string; newPassword: string 
 
 // 获取用户列表
 export const getUserList = (params: SysUserListParams) => {
-  return request('/api/system/user/list', {
+  return request('/api/v1/sys/user', {
     method: 'GET',
     params,
   });
@@ -106,14 +106,14 @@ export const getUserList = (params: SysUserListParams) => {
 
 // 获取用户详情
 export const getUserDetail = (id: string) => {
-  return request(`/api/system/user/detail/${id}`, {
+  return request(`/api/v1/sys/user/${id}`, {
     method: 'GET',
   });
 };
 
 // 创建用户
 export const createUser = (data: SysUser) => {
-  return request('/api/system/user/create', {
+  return request('/api/v1/sys/user', {
     method: 'POST',
     data,
   });
@@ -121,7 +121,7 @@ export const createUser = (data: SysUser) => {
 
 // 更新用户
 export const updateUser = (id: string, data: SysUser) => {
-  return request(`/api/system/user/update/${id}`, {
+  return request(`/api/v1/sys/user/${id}`, {
     method: 'PUT',
     data,
   });
@@ -129,16 +129,16 @@ export const updateUser = (id: string, data: SysUser) => {
 
 // 删除用户
 export const deleteUser = (id: string) => {
-  return request(`/api/system/user/delete/${id}`, {
+  return request(`/api/v1/sys/user/${id}`, {
     method: 'DELETE',
   });
 };
 
 // 重置密码
-export const resetPassword = (id: string, newPassword: string) => {
-  return request(`/api/system/user/reset-password/${id}`, {
+export const resetPassword = (id: string, password: string) => {
+  return request(`/api/v1/sys/user/${id}`, {
     method: 'PUT',
-    data: { newPassword },
+    data: { password },
   });
 };
 
@@ -186,23 +186,15 @@ export const batchUpdateConfig = (data: Record<string, string>) => {
 
 // 获取操作日志列表
 export const getLogList = (params: SysLogListParams) => {
-  return request('/api/system/log/list', {
+  return request('/api/v1/sys/operationLog', {
     method: 'GET',
     params,
   });
 };
 
-// 获取操作日志详情
-export const getLogDetail = (id: string) => {
-  return request(`/api/system/log/detail/${id}`, {
-    method: 'GET',
-  });
-};
-
-// 清空日志
-export const clearLogs = (params?: { endDate?: string }) => {
-  return request('/api/system/log/clear', {
+// 删除日志
+export const clearLogs = (id: string) => {
+  return request(`/api/v1/sys/operationLog/${id}`, {
     method: 'DELETE',
-    params,
   });
 };
