@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: registration
     prefix: /api/v1/registration
+    jwt: Auth
 )
 service gateway {
     @handler CreateRegistration

@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: sys/operationLog
     prefix: /api/v1/sys/operationLog
+    jwt: Auth
 )
 service gateway {
     @handler CreateOperationLog

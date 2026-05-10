@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: core/advantage
     prefix: /api/v1/core/advantage
+    jwt: Auth
 )
 service gateway {
     @handler CreateAdvantage

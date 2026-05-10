@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"server/common/jwt"
 	"server/gateway/internal/config"
 	"server/rpc/upload/uploadClient"
 	"time"
@@ -21,6 +22,7 @@ type ServiceContext struct {
 	Config       config.Config
 	DB           *gorm.DB            // GORM的MySQL客户端实例
 	UploadClient uploadClient.Upload //上传服务 RPC 客户端
+	JwtAuth      *jwt.JwtAuth        // JWT 认证配置
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -59,5 +61,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:       c,
 		DB:           db,
 		UploadClient: uploadClient.NewUpload(zrpc.MustNewClient(c.UploadRpc)),
+		JwtAuth: &jwt.JwtAuth{
+			Secret:        c.Auth.AccessSecret,
+			AccessExpire:  c.Auth.AccessExpire,
+			RefreshExpire: c.Auth.RefreshExpire,
+			Issuer:        c.Auth.Issuer,
+		},
 	}
 }

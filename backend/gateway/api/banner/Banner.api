@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: banner
     prefix: /api/v1/banner
+    jwt: Auth
 )
 service gateway {
     @handler CreateBanner

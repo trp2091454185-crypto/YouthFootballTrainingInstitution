@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: course/Course
     prefix: /api/v1/course/Course
+    jwt: Auth
 )
 service gateway {
     @handler CreateCourse

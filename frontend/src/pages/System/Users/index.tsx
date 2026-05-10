@@ -25,22 +25,19 @@ import type { SysUser, SysUserListParams } from '@/services/system';
 import {
   getUserList,
   deleteUser,
-  toggleUserStatus,
   resetPassword,
 } from '@/services/system';
 import SpecialTable from '@/components/SpecialTable';
 import UserEditModal from './edit';
 import { USER_ROLE } from '@/utils/constant';
+import dayjs from 'dayjs';
 
 const UserManagement: React.FC = () => {
-  const navigate = useNavigate();
   useEffect(() => {
     document.title = '用户列表';
   }, []);
   const actionRef = useRef<ActionType>();
   const [selectedRows, setSelectedRows] = useState<SysUser[]>([]);
-  const [detailVisible, setDetailVisible] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState<SysUser | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editRecord, setEditRecord] = useState<SysUser | null>(null);
   const [resetModalOpen, setResetModalOpen] = useState(false);
@@ -93,21 +90,6 @@ const UserManagement: React.FC = () => {
       actionRef.current?.reload();
     } catch (error) {
       message.error('批量删除失败');
-    }
-  };
-
-  // 处理状态切换
-  const handleStatusChange = async (id: string, status: number) => {
-    try {
-      const res = await toggleUserStatus(id, status);
-      if (res.success) {
-        message.success(status === 1 ? '用户已启用' : '用户已禁用');
-        actionRef.current?.reload();
-      } else {
-        message.error(res.errorMessage || '操作失败');
-      }
-    } catch (error) {
-      message.error('操作失败');
     }
   };
 
@@ -166,17 +148,6 @@ const UserManagement: React.FC = () => {
     setEditRecord(null);
   };
 
-  // 查看详情
-  const handleViewDetail = (record: SysUser) => {
-    setCurrentRecord(record);
-    setDetailVisible(true);
-  };
-
-  // 关闭详情
-  const handleCloseDetail = () => {
-    setDetailVisible(false);
-    setCurrentRecord(null);
-  };
 
   // 表格列定义
   const columns: ProColumns<SysUser>[] = [
@@ -199,8 +170,8 @@ const UserManagement: React.FC = () => {
         options: { USER_ROLE }
       },
       render: (_, record) => {
-        const role = USER_ROLE[record.role];
-        return <>{role?.label || '未知'}</>;
+        const roleItem = USER_ROLE.find(item => item.value === record.role);
+        return <>{roleItem?.label || '未知'}</>;
       },
     },
     {
@@ -221,7 +192,7 @@ const UserManagement: React.FC = () => {
       width: 200,
       render: (_, record) => (
         <div>
-          <div>{record.lastLoginTime || '-'}</div>
+          <div>{dayjs(record.lastLoginTime).format('YYYY-MM-DD HH:mm:ss') || '-'}</div>
           {record.lastLoginIp && (
             <div style={{ fontSize: 12, color: '#999' }}>
               IP: {record.lastLoginIp}

@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: class/schedule
     prefix: /api/v1/class/schedule
+    jwt: Auth
 )
 service gateway {
     @handler CreateSchedule

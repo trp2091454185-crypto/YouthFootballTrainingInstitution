@@ -1,0 +1,81 @@
+syntax = "v1"
+
+// ==================== 认证相关类型定义 ====================
+
+type (
+	// LoginReq 登录请求
+	LoginReq {
+		Username string `json:"username,optional"` // 用户名
+		Password string `json:"password,optional"` // 密码
+	}
+
+	// UserInfo 用户基本信息
+	UserInfo {
+		Id       int64  `json:"id"`
+		Username string `json:"username"`
+		Role     int32  `json:"role"`
+		RoleName string `json:"roleName"` // 角色名称: 管理员/超级管理员
+	}
+
+	// LoginResp 登录响应
+	LoginResp {
+		AccessToken  string   `json:"accessToken"`           // 访问令牌 (JWT)
+		RefreshToken string   `json:"refreshToken"`          // 刷新令牌 (JWT)
+		ExpireIn     int64    `json:"expireIn"`              // Access过期时间(秒)
+		UserInfo     UserInfo `json:"userInfo"`             // 用户信息
+	}
+
+	// LogoutResp 登出响应 (无状态设计)
+	LogoutResp {}
+
+	// RefreshTokenReq 刷新令牌请求
+	RefreshTokenReq {
+		RefreshToken string `json:"refreshToken,optional"` // 刷新令牌
+	}
+
+	// RefreshTokenResp 刷新令牌响应
+	RefreshTokenResp {
+		AccessToken  string `json:"accessToken"`  // 新的访问令牌
+		RefreshToken string `json:"refreshToken"` // 新的刷新令牌
+		ExpireIn     int64  `json:"expireIn"`     // Access过期时间(秒)
+	}
+
+	// GetCurrentUserResp 获取当前用户信息响应
+	GetCurrentUserResp {
+		Id       int64   `json:"id"`
+		Username string  `json:"username"`
+		Role     int32   `json:"role"`
+		RoleName string  `json:"roleName"`            // 角色名称
+		Phone    *string `json:"phone,optional"`      // 手机号
+		Email    *string `json:"email,optional"`      // 邮箱
+	}
+)
+
+// ==================== 认证路由 ====================
+
+// 公开接口: 无需认证即可访问
+@server(
+	group: login/auth
+	prefix: /api/v1/auth
+)
+service gateway {
+	@handler Login
+	post /login(LoginReq) returns (LoginResp)
+
+	@handler Logout
+	post /logout returns (LogoutResp)
+
+	@handler RefreshToken
+	post /refresh(RefreshTokenReq) returns (RefreshTokenResp)
+}
+
+// 需要认证的接口: 携带有效 AccessToken 才能访问
+@server(
+	group: login/auth
+	prefix: /api/v1/auth
+	jwt: Auth
+)
+service gateway {
+	@handler GetCurrentUser
+	get /currentUser returns (GetCurrentUserResp)
+}

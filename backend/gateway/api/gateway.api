@@ -9,6 +9,7 @@ info (
 )
 
 import (
+	"login/login.api"
 	"banner/Banner.api"
 	"class/schedule.api"
 	"coach/Coach.api"

@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: institution/milestone
     prefix: /api/v1/institution/milestone
+    jwt: Auth
 )
 service gateway {
     @handler CreateMilestone

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"server/common/middleware"
 	"server/common/tools/snowx"
 	"server/gateway/internal/config"
 	"server/gateway/internal/handler"
@@ -32,6 +33,26 @@ func main() {
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)
+
+	// 注册全局 JWT 认证中间件（白名单路由放行）
+	// 新增公开路由时只需在下方白名单追加路径，无需修改 routes.go
+	whiteList := []string{
+		// 认证接口（登录/登出/刷新）
+		"/api/v1/auth/login",
+		"/api/v1/auth/logout",
+		"/api/v1/auth/refresh",
+		// 前台展示接口（公开访问）
+		"/api/v1/frontend/about/facility",
+		"/api/v1/frontend/about/honor",
+		"/api/v1/frontend/about/info",
+		"/api/v1/frontend/coaches/ListCoaches",
+		"/api/v1/frontend/courses/CourseCategory",
+		"/api/v1/frontend/courses/CourseList",
+		"/api/v1/frontend/home/banner",
+		"/api/v1/frontend/home/coreStrengths",
+	}
+	server.Use(rest.ToMiddleware(middleware.AuthMiddlewareWhiteList(ctx.JwtAuth, whiteList)))
+
 	handler.RegisterHandlers(server, ctx)
 
 	// 注册静态文件服务：/uploads/* -> ./static/images/*

@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: institution/info
     prefix: /api/v1/institution/info
+    jwt: Auth
 )
 service gateway {
     @handler CreateInfo

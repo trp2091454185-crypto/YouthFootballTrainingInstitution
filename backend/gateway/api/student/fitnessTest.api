@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: student/fitnessTest
     prefix: /api/v1/student/fitnessTest
+    jwt: Auth
 )
 service gateway {
     @handler CreateFitnessTest

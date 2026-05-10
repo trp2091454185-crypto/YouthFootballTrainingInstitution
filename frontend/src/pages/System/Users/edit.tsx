@@ -71,6 +71,10 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
                     rules={[
                         { required: true, message: '请输入用户名' },
                         { min: 3, max: 20, message: '用户名长度为3-20个字符' },
+                        {
+                            pattern: /^[a-zA-Z0-9_]+$/,
+                            message: '用户名只能包含英文字母、数字、下划线，不能输入中文',
+                        },
                     ]}
                 >
                     <Input placeholder="请输入用户名" />

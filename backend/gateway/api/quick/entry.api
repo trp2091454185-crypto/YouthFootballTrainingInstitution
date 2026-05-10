@@ -4,6 +4,7 @@ syntax = "v1"
 @server(
     group: quick/entry
     prefix: /api/v1/quick/entry
+    jwt: Auth
 )
 service gateway {
     @handler CreateEntry

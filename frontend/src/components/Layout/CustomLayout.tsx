@@ -1,28 +1,24 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Outlet, useLocation, useNavigate } from '@umijs/max';
-import { Layout, Menu, Avatar, Dropdown, Divider, Spin } from 'antd';
+import { Layout, Menu, Avatar, Dropdown } from 'antd';
 import {
     HomeOutlined,
     UserOutlined,
     TeamOutlined,
-    SafetyOutlined,
-    TrophyOutlined,
-    ScheduleOutlined,
-    AccountBookOutlined,
-    EnvironmentOutlined,
-    SettingOutlined,
-    LogoutOutlined,
     FormOutlined,
     ApartmentOutlined,
     SolutionOutlined,
     BookOutlined,
     EditOutlined,
     CommentOutlined,
+    SettingOutlined,
+    LogoutOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import logo from '@/assets/logo.png';
 import routes from '@/config/routes';
 import './index.less';
+import { clearAuth, getUserInfo } from '@/utils/auth';
 
 const { Sider, Content } = Layout;
 
@@ -60,6 +56,7 @@ const CustomLayout: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const currentUser = getUserInfo();
 
 
     // 从路由配置生成菜单项
@@ -73,19 +70,6 @@ const CustomLayout: React.FC = () => {
 
     // 下拉菜单项
     const userMenuItems = [
-        // {
-        //     key: 'profile',
-        //     label: '个人信息',
-        //     icon: <UserOutlined />,
-        // },
-        // {
-        //     key: 'settings',
-        //     label: '设置',
-        //     icon: <SettingOutlined />,
-        // },
-        // {
-        //     type: 'divider' as const,
-        // },
         {
             key: 'logout',
             label: '退出登录',
@@ -96,9 +80,9 @@ const CustomLayout: React.FC = () => {
     // 用户下拉菜单点击
     const handleUserMenuClick: MenuProps['onClick'] = ({ key }) => {
         if (key === 'logout') {
-            // 退出登录逻辑
-            localStorage.clear();
-            navigate('/frontend');
+            // 清除本地认证信息
+            clearAuth();
+            navigate('/');
         }
     };
 
@@ -136,7 +120,7 @@ const CustomLayout: React.FC = () => {
                 >
                     <div className="user-info">
                         <Avatar size="small" icon={<UserOutlined />} />
-                        <span className="user-name">管理员</span>
+                        <span className="user-name">{currentUser?.roleName || '管理员'}</span>
                     </div>
                 </Dropdown>
             </Sider>

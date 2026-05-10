@@ -1,26 +1,39 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginFormPage, ProConfigProvider, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
-import { Button, Divider, message, Space, theme, Typography } from 'antd';
+import { message, theme, Typography } from 'antd';
 import logo from '@/assets/logo.png';
 import './index.less';
 import { useNavigate } from '@umijs/max';
+import { authLogin } from '@/services/auth';
+import {
+    setAccessToken,
+    setRefreshToken,
+    setUserInfo,
+} from '@/utils/auth';
 
 const { Link } = Typography;
 
 const Page = () => {
-    const { token } = theme.useToken();
     const navigate = useNavigate();
 
-    const handleLogin = async (values: Record<string, string>) => {
-        // try {
-        //     // TODO: 调用实际的登录API
-        //     console.log('登录信息:', values);
-        //     message.success('登录成功');
-        // } catch (error) {
-        //     message.error('登录失败，请重试');
-        // }
-        message.success('登录成功');
-        navigate('/dashboard');
+    const handleLogin = async (values: any) => {
+        try {
+            const res: any = await authLogin(values);
+            if (res.success && res.data) {
+                // 持久化双 Token 和用户信息
+                setAccessToken(res.data.accessToken);
+                setRefreshToken(res.data.refreshToken);
+                setUserInfo(res.data.userInfo);
+
+                message.success('登录成功');
+                // navigate 后应用重新渲染，getInitialState 会自动从 localStorage 读取用户态
+                navigate('/dashboard');
+            } else {
+                message.error(res.errorMessage || '登录失败，请重试');
+            }
+        } catch (error) {
+            message.error('登录失败，请重试');
+        }
     };
 
     return (
@@ -59,7 +72,6 @@ const Page = () => {
                         size: 'large',
                         prefix: (
                             <UserOutlined
-                                style={{ color: token.colorTextSecondary }}
                                 className="prefixIcon"
                             />
                         ),
@@ -76,7 +88,6 @@ const Page = () => {
                         size: 'large',
                         prefix: (
                             <LockOutlined
-                                style={{ color: token.colorTextSecondary }}
                                 className="prefixIcon"
                             />
                         ),
